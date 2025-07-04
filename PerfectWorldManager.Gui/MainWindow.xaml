@@ -360,18 +360,100 @@
                             </Grid>
                         </Border>
                         
-                        <DataGrid Name="ProcessConfigDataGrid" ItemsSource="{Binding AppSettings.ProcessConfigurations}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="400" Margin="0,0,0,10" HeadersVisibility="Column" GridLinesVisibility="Horizontal" BorderBrush="LightGray" BorderThickness="1">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="{DynamicResource Settings_Col_Type}" Binding="{Binding Type}" IsReadOnly="True" Width="100" MinWidth="100"/>
-                                <DataGridTextColumn Header="{DynamicResource Settings_Col_DisplayName}" Binding="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="150"/>
-                                <DataGridCheckBoxColumn Header="{DynamicResource Settings_Col_Enabled}" Binding="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="80" MinWidth="60"/>
-                                <DataGridTextColumn Header="{DynamicResource Settings_Col_ExecDir}" Binding="{Binding ExecutableDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="120" MinWidth="100"/>
-                                <DataGridTextColumn Header="{DynamicResource Settings_Col_ExecutableName}" Binding="{Binding ExecutableName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="120"/>
-                                <DataGridTextColumn Header="{DynamicResource Settings_Col_StartArgs}" Binding="{Binding StartArguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="150"/>
-                                <DataGridTextColumn Header="{DynamicResource Settings_Col_StatusPattern}" Binding="{Binding StatusCheckPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="150"/>
-                                <DataGridTextColumn Header="{DynamicResource Settings_Col_MapID}" Binding="{Binding MapId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="80"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <!-- Process Configurations List -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Text="Process Configuration Details" Grid.Row="0" FontWeight="SemiBold" Margin="0,0,0,10" Foreground="{StaticResource ModernAccentBrush}"/>
+                                
+                                <DataGrid Name="ProcessConfigDataGrid" Grid.Row="1"
+                                          ItemsSource="{Binding AppSettings.ProcessConfigurations}" 
+                                          AutoGenerateColumns="False" 
+                                          CanUserAddRows="False" 
+                                          CanUserDeleteRows="False" 
+                                          MaxHeight="500" 
+                                          HeadersVisibility="Column" 
+                                          GridLinesVisibility="Horizontal" 
+                                          RowHeight="35"
+                                          ColumnHeaderHeight="40"
+                                          FontSize="13"
+                                          BorderThickness="0"
+                                          Background="Transparent">
+                                    <DataGrid.Resources>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Padding" Value="8,4"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                        </Style>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Padding" Value="8,8"/>
+                                            <Setter Property="FontWeight" Value="SemiBold"/>
+                                            <Setter Property="FontSize" Value="13"/>
+                                        </Style>
+                                        <Style TargetType="TextBox">
+                                            <Setter Property="Padding" Value="4,2"/>
+                                            <Setter Property="MinHeight" Value="26"/>
+                                        </Style>
+                                    </DataGrid.Resources>
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Enabled" Width="70">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        
+                                        <DataGridTextColumn Header="Type" 
+                                                            Binding="{Binding Type}" 
+                                                            IsReadOnly="True" 
+                                                            Width="120">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                                    <Setter Property="Foreground" Value="{StaticResource ModernAccentBrush}"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        
+                                        <DataGridTextColumn Header="Display Name" 
+                                                            Binding="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                            Width="200"/>
+                                        
+                                        <DataGridTextColumn Header="Executable Directory" 
+                                                            Binding="{Binding ExecutableDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                            Width="150"/>
+                                        
+                                        <DataGridTextColumn Header="Executable" 
+                                                            Binding="{Binding ExecutableName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                            Width="150"/>
+                                        
+                                        <DataGridTextColumn Header="Start Arguments" 
+                                                            Binding="{Binding StartArguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                            Width="250"/>
+                                        
+                                        <DataGridTextColumn Header="Status Pattern" 
+                                                            Binding="{Binding StatusCheckPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                            Width="200"/>
+                                        
+                                        <DataGridTextColumn Header="Map ID" 
+                                                            Binding="{Binding MapId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                            Width="80">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </Border>
                         <Button Content="{DynamicResource Settings_SaveButton}" x:Name="SaveSettingsButton" Margin="0,10,0,10" Padding="10,5" HorizontalAlignment="Left" Click="SaveSettings_Click"/>
                     </StackPanel>
                 </ScrollViewer>
