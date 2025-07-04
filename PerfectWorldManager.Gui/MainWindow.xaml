@@ -346,112 +346,238 @@
             </TabItem>
             <TabItem Header="{DynamicResource Tab_Accounts}" x:Name="AccountsTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Header="{DynamicResource Accounts_CreateAccount}" Grid.Row="0" Grid.Column="0" Margin="5" Padding="10">
+                    <StackPanel Margin="20">
+                        <!-- Account Management Header -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,15" Padding="20">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Accounts_Username}"/>
-                                <TextBox Name="CreateUserUsernameTextBox" Margin="0,0,0,5"/>
-                                <TextBlock Text="{DynamicResource Accounts_Password}"/>
-                                <PasswordBox Name="CreateUserPasswordBox" Margin="0,0,0,5"/>
-                                <TextBlock Text="{DynamicResource Accounts_Email}"/>
-                                <TextBox Name="CreateUserEmailTextBox" Margin="0,0,0,10" Text="not_needed@example.com"/>
-                                <Button Content="{DynamicResource Accounts_CreateAccount_Button}" x:Name="CreateAccountButton" Click="CreateAccountButton_Click"/>
-                                <TextBlock Name="CreateUserStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
+                                <TextBlock Text="Account Management" FontSize="20" FontWeight="Bold" Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,10"/>
+                                <TextBlock Text="Manage user accounts, passwords, in-game currency, and administrative privileges" 
+                                           TextWrapping="Wrap" Opacity="0.8"/>
                             </StackPanel>
-                        </GroupBox>
-                        <GroupBox Header="{DynamicResource Accounts_ChangePassword}" Grid.Row="1" Grid.Column="0" Margin="5" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource Accounts_Username}"/>
-                                <TextBox Name="ChangePassUsernameTextBox" Margin="0,0,0,5"/>
-                                <TextBlock Text="{DynamicResource Accounts_OldPassword}"/>
-                                <PasswordBox Name="ChangePassOldPasswordBox" Margin="0,0,0,5"/>
-                                <TextBlock Text="{DynamicResource Accounts_NewPassword}"/>
-                                <PasswordBox Name="ChangePassNewPasswordBox" Margin="0,0,0,10"/>
-                                <Button Content="{DynamicResource Accounts_ChangePassword_Button}" x:Name="ChangePasswordButton" Click="ChangePasswordButton_Click"/>
-                                <TextBlock Name="ChangePassStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </GroupBox>
-                        <GroupBox Header="{DynamicResource Accounts_AddCubi}" Grid.Row="0" Grid.Column="1" Margin="5" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource Accounts_Identifier}"/>
-                                <TextBox Name="AddCubiIdentifierTextBox" Margin="0,0,0,5"/>
-                                <TextBlock Text="{DynamicResource Accounts_IdentifierType}"/>
-                                <ComboBox Name="AddCubiIdentifierTypeComboBox" Margin="0,0,0,5">
-                                    <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
-                                    <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
-                                </ComboBox>
-                                <TextBlock Text="{DynamicResource Accounts_Amount}"/>
-                                <TextBox Name="AddCubiAmountTextBox" Margin="0,0,0,10" PreviewTextInput="NumericTextBox_PreviewTextInput"/>
-                                <Button Content="{DynamicResource Accounts_AddCubi_Button}" x:Name="AddCubiButton" Click="AddCubiButton_Click"/>
-                                <TextBlock Name="AddCubiStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </GroupBox>
-                        <GroupBox Header="{DynamicResource Accounts_SetGMStatus}" Grid.Row="1" Grid.Column="1" Margin="5" Padding="10">
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource Accounts_Identifier}"/>
-                                <TextBox Name="SetGmIdentifierTextBox" Margin="0,0,0,5"/>
-                                <TextBlock Text="{DynamicResource Accounts_IdentifierType}"/>
-                                <ComboBox Name="SetGmIdentifierTypeComboBox" Margin="0,0,0,5">
-                                    <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
-                                    <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
-                                </ComboBox>
-                                <TextBlock Text="{DynamicResource Accounts_Action}"/>
-                                <ComboBox Name="SetGmActionComboBox" Margin="0,0,0,10">
-                                    <ComboBoxItem Content="{DynamicResource Accounts_GrantGM}" IsSelected="True"/>
-                                    <ComboBoxItem Content="{DynamicResource Accounts_RevokeGM}"/>
-                                </ComboBox>
-                                <Button Content="{DynamicResource Accounts_SetGMStatus_Button}" x:Name="SetGmStatusButton" Click="SetGmStatusButton_Click"/>
-                                <TextBlock Name="SetGmStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </GroupBox>
-                        <GroupBox Header="{DynamicResource Accounts_DeleteAccount}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" Padding="10">
-                            <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{DynamicResource Accounts_Identifier}" VerticalAlignment="Center"/>
-                                    <TextBox Name="DeleteUserIdentifierTextBox" Margin="5,0,0,0" Width="150" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{DynamicResource Accounts_Type}" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                                    <ComboBox Name="DeleteUserIdentifierTypeComboBox" Margin="5,0,0,0" Width="100" VerticalAlignment="Center">
+                        </Border>
+
+                        <!-- Main Actions Grid -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Create Account -->
+                            <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernCard}" Padding="20">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Accounts_CreateAccount}" FontSize="16" FontWeight="SemiBold" 
+                                               Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,15"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Username}" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                    <TextBox Name="CreateUserUsernameTextBox" Padding="10,8" FontSize="14"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Password}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <PasswordBox Name="CreateUserPasswordBox" Padding="10,8" FontSize="14"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Email}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <TextBox Name="CreateUserEmailTextBox" Text="not_needed@example.com" Padding="10,8" FontSize="14"/>
+                                    
+                                    <Button Content="{DynamicResource Accounts_CreateAccount_Button}" 
+                                            Name="CreateAccountButton" Click="CreateAccountButton_Click" 
+                                            Margin="0,20,0,0" Padding="12,10" 
+                                            Style="{StaticResource AccentButtonStyle}"/>
+                                    
+                                    <TextBlock Name="CreateUserStatusTextBlock" Margin="0,10,0,0" 
+                                               FontWeight="SemiBold" TextWrapping="Wrap" FontSize="13"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Add Cubi -->
+                            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernCard}" Padding="20">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Accounts_AddCubi}" FontSize="16" FontWeight="SemiBold" 
+                                               Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,15"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Identifier}" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                    <TextBox Name="AddCubiIdentifierTextBox" Padding="10,8" FontSize="14"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_IdentifierType}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <ComboBox Name="AddCubiIdentifierTypeComboBox" Padding="10,8" FontSize="14">
                                         <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
                                         <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
                                     </ComboBox>
-                                    <Button Content="{DynamicResource Accounts_DeleteAccount_Button}" x:Name="DeleteUserButton" Click="DeleteUserButton_Click" Margin="10,0,0,0" Background="Salmon" Foreground="White"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Amount}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <TextBox Name="AddCubiAmountTextBox" PreviewTextInput="NumericTextBox_PreviewTextInput" 
+                                             Padding="10,8" FontSize="14"/>
+                                    
+                                    <Button Content="{DynamicResource Accounts_AddCubi_Button}" 
+                                            Name="AddCubiButton" Click="AddCubiButton_Click" 
+                                            Margin="0,20,0,0" Padding="12,10"
+                                            Background="{StaticResource ModernSuccessBrush}"/>
+                                    
+                                    <TextBlock Name="AddCubiStatusTextBlock" Margin="0,10,0,0" 
+                                               FontWeight="SemiBold" TextWrapping="Wrap" FontSize="13"/>
                                 </StackPanel>
-                                <TextBlock Name="DeleteUserStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </GroupBox>
-                        <DockPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="5,10,5,5">
-                            <TextBlock Text="{DynamicResource Accounts_BrowseAccounts}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,5"/>
-                            <Button DockPanel.Dock="Right" Content="{DynamicResource Accounts_RefreshList}" x:Name="BrowseAccountsRefreshButton" HorizontalAlignment="Right" Margin="0,0,5,0" VerticalAlignment="Top" Click="BrowseAccountsRefreshButton_Click" Height="25"/>
-                        </DockPanel>
-                        <ListView Name="BrowseAccountsListView" Grid.Row="4" Grid.ColumnSpan="2" Margin="5" MaxHeight="300">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="{DynamicResource Accounts_Col_ID}" DisplayMemberBinding="{Binding Id}" Width="60"/>
-                                    <GridViewColumn Header="{DynamicResource Accounts_Col_Name}" DisplayMemberBinding="{Binding Name}" Width="150"/>
-                                    <GridViewColumn Header="{DynamicResource Accounts_Col_Email}" DisplayMemberBinding="{Binding Email}" Width="200"/>
-                                    <GridViewColumn Header="{DynamicResource Accounts_Col_Created}" DisplayMemberBinding="{Binding CreateTime, StringFormat='yyyy-MM-dd HH:mm'}" Width="150"/>
-                                    <GridViewColumn Header="{DynamicResource Accounts_Col_GM}" Width="50">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <CheckBox IsChecked="{Binding IsGm}" IsEnabled="False" HorizontalAlignment="Center"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
+                            </Border>
+
+                            <!-- Change Password -->
+                            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernCard}" Padding="20" Margin="0,20,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Accounts_ChangePassword}" FontSize="16" FontWeight="SemiBold" 
+                                               Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,15"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Username}" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                    <TextBox Name="ChangePassUsernameTextBox" Padding="10,8" FontSize="14"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_OldPassword}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <PasswordBox Name="ChangePassOldPasswordBox" Padding="10,8" FontSize="14"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_NewPassword}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <PasswordBox Name="ChangePassNewPasswordBox" Padding="10,8" FontSize="14"/>
+                                    
+                                    <Button Content="{DynamicResource Accounts_ChangePassword_Button}" 
+                                            Name="ChangePasswordButton" Click="ChangePasswordButton_Click" 
+                                            Margin="0,20,0,0" Padding="12,10"
+                                            Background="{StaticResource ModernWarningBrush}"/>
+                                    
+                                    <TextBlock Name="ChangePassStatusTextBlock" Margin="0,10,0,0" 
+                                               FontWeight="SemiBold" TextWrapping="Wrap" FontSize="13"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Set GM Status -->
+                            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernCard}" Padding="20" Margin="0,20,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Accounts_SetGMStatus}" FontSize="16" FontWeight="SemiBold" 
+                                               Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,15"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Identifier}" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                    <TextBox Name="SetGmIdentifierTextBox" Padding="10,8" FontSize="14"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_IdentifierType}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <ComboBox Name="SetGmIdentifierTypeComboBox" Padding="10,8" FontSize="14">
+                                        <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
+                                        <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
+                                    </ComboBox>
+                                    
+                                    <TextBlock Text="{DynamicResource Accounts_Action}" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                                    <ComboBox Name="SetGmActionComboBox" Padding="10,8" FontSize="14">
+                                        <ComboBoxItem Content="{DynamicResource Accounts_GrantGM}" IsSelected="True"/>
+                                        <ComboBoxItem Content="{DynamicResource Accounts_RevokeGM}"/>
+                                    </ComboBox>
+                                    
+                                    <Button Content="{DynamicResource Accounts_SetGMStatus_Button}" 
+                                            Name="SetGmStatusButton" Click="SetGmStatusButton_Click" 
+                                            Margin="0,20,0,0" Padding="12,10"
+                                            Background="{StaticResource ModernInfoBrush}"/>
+                                    
+                                    <TextBlock Name="SetGmStatusTextBlock" Margin="0,10,0,0" 
+                                               FontWeight="SemiBold" TextWrapping="Wrap" FontSize="13"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Delete Account -->
+                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource ModernCard}" 
+                                    Padding="20" Margin="0,20,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Accounts_DeleteAccount}" FontSize="16" FontWeight="SemiBold" 
+                                               Foreground="{StaticResource ModernErrorBrush}" Margin="0,0,0,15"/>
+                                    
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <TextBlock Grid.Column="0" Text="{DynamicResource Accounts_Identifier}" 
+                                                   VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                                        <TextBox Grid.Column="1" Name="DeleteUserIdentifierTextBox" 
+                                                 Padding="10,8" FontSize="14" VerticalAlignment="Center"/>
+                                        
+                                        <TextBlock Grid.Column="2" Text="{DynamicResource Accounts_Type}" 
+                                                   VerticalAlignment="Center" Margin="20,0,10,0" FontWeight="SemiBold"/>
+                                        <ComboBox Grid.Column="3" Name="DeleteUserIdentifierTypeComboBox" 
+                                                  Padding="10,8" FontSize="14" VerticalAlignment="Center">
+                                            <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
+                                            <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
+                                        </ComboBox>
+                                        
+                                        <Button Grid.Column="4" Content="{DynamicResource Accounts_DeleteAccount_Button}" 
+                                                Name="DeleteUserButton" Click="DeleteUserButton_Click" 
+                                                Margin="20,0,0,0" Padding="15,8"
+                                                Background="{StaticResource ModernErrorBrush}"/>
+                                    </Grid>
+                                    
+                                    <TextBlock Name="DeleteUserStatusTextBlock" Margin="0,15,0,0" 
+                                               FontWeight="SemiBold" TextWrapping="Wrap" FontSize="13"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <!-- Browse Accounts Section -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,20,0,0" Padding="20">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                
+                                <!-- Header -->
+                                <Grid Grid.Row="0" Margin="0,0,0,15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Grid.Column="0" Text="{DynamicResource Accounts_BrowseAccounts}" 
+                                               FontSize="18" FontWeight="Bold" 
+                                               Foreground="{StaticResource ModernAccentBrush}"/>
+                                    
+                                    <Button Grid.Column="1" Content="{DynamicResource Accounts_RefreshList}" 
+                                            Name="BrowseAccountsRefreshButton" Click="BrowseAccountsRefreshButton_Click" 
+                                            Padding="15,8" Style="{StaticResource AccentButtonStyle}"/>
+                                </Grid>
+                                
+                                <!-- Accounts List -->
+                                <Border Grid.Row="1" BorderBrush="{StaticResource ModernBorderBrush}" 
+                                        BorderThickness="1" CornerRadius="4">
+                                    <ListView Name="BrowseAccountsListView" 
+                                              MaxHeight="400" 
+                                              Background="Transparent" 
+                                              BorderThickness="0">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn Header="{DynamicResource Accounts_Col_ID}" 
+                                                                DisplayMemberBinding="{Binding Id}" Width="80"/>
+                                                <GridViewColumn Header="{DynamicResource Accounts_Col_Name}" 
+                                                                DisplayMemberBinding="{Binding Name}" Width="200"/>
+                                                <GridViewColumn Header="{DynamicResource Accounts_Col_Email}" 
+                                                                DisplayMemberBinding="{Binding Email}" Width="250"/>
+                                                <GridViewColumn Header="{DynamicResource Accounts_Col_Created}" 
+                                                                DisplayMemberBinding="{Binding CreateTime, StringFormat='yyyy-MM-dd HH:mm'}" 
+                                                                Width="180"/>
+                                                <GridViewColumn Header="{DynamicResource Accounts_Col_GM}" Width="80">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox IsChecked="{Binding IsGm}" IsEnabled="False" 
+                                                                      HorizontalAlignment="Center"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{DynamicResource Tab_MapManagement}" x:Name="MapManagementTab">
