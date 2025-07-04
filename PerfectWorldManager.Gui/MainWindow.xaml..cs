@@ -829,7 +829,7 @@ namespace PerfectWorldManager.Gui
 
                     if (selectedTab == CharacterEditorTabItem)
                     {
-                        if (this.FindName("CharacterEditorViewControl") is CharacterEditorView cev && cev.DataContext != _characterEditorViewModel)
+                        if (this.FindName("CharacterEditorViewControl") is CharacterEditorViewRedesigned cev && cev.DataContext != _characterEditorViewModel)
                         {
                             cev.DataContext = _characterEditorViewModel;
                         }
