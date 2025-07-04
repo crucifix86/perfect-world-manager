@@ -556,6 +556,7 @@
         </Setter>
     </Style>
 
+    <!-- Simple TabControl styling without custom template -->
     <Style TargetType="TabControl">
         <Setter Property="Background" Value="{StaticResource ModernBackgroundBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource ModernBorderBrush}"/>
@@ -563,92 +564,26 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="FontFamily" Value="{StaticResource ModernFontFamily}"/>
         <Setter Property="FontSize" Value="{StaticResource ModernBaseFontSize}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TabControl">
-                    <Grid KeyboardNavigation.TabNavigation="Local">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TabPanel x:Name="HeaderPanel"
-                                  Grid.Row="0"
-                                  Panel.ZIndex="1"
-                                  Margin="0,0,4,-1"
-                                  IsItemsHost="True"
-                                  KeyboardNavigation.TabIndex="1"
-                                  Background="Transparent"/>
-                        <Border x:Name="Border"
-                                Grid.Row="1"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                Background="{TemplateBinding Background}"
-                                KeyboardNavigation.TabNavigation="Local"
-                                KeyboardNavigation.DirectionalNavigation="Contained"
-                                KeyboardNavigation.TabIndex="2">
-                            <ContentPresenter x:Name="PART_SelectedContentHost"
-                                              Margin="{TemplateBinding Padding}"
-                                              ContentSource="SelectedContent"/>
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
+    <!-- Simple TabItem styling without custom template -->
     <Style TargetType="TabItem">
         <Setter Property="Background" Value="{StaticResource ModernLighterBackgroundBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource ModernSecondaryTextBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource ModernForegroundBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource ModernBorderBrush}"/>
         <Setter Property="Padding" Value="10,6"/>
         <Setter Property="FontSize" Value="{StaticResource ModernBaseFontSize}"/>
         <Setter Property="FontFamily" Value="{StaticResource ModernFontFamily}"/>
-        <Setter Property="FocusVisualStyle" Value="{StaticResource ModernFocusVisualStyle}"/>
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TabItem">
-                    <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
-                        <Border x:Name="mainBorder"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="1,1,1,0"
-                                Background="{TemplateBinding Background}"
-                                Margin="0"
-                                CornerRadius="4,4,0,0">
-                            <Border x:Name="innerBorder" BorderBrush="{StaticResource ModernBorderBrush}" 
-                                    BorderThickness="0"
-                                    Background="Transparent"
-                                    Margin="-1" 
-                                    Opacity="0"/>
-                        </Border>
-                        <ContentPresenter x:Name="contentPresenter"
-                                          ContentSource="Header"
-                                          Focusable="False"
-                                          HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
-                                          Margin="{TemplateBinding Padding}"
-                                          RecognizesAccessKey="True"
-                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                          VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ModernControlMouseOverBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource ModernForegroundBrush}"/>
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ModernBackgroundBrush}" />
-                            <Setter Property="Foreground" Value="{StaticResource ModernAccentBrush}"/>
-                            <Setter TargetName="mainBorder" Property="BorderThickness" Value="1,1,1,0"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="mainBorder" Property="Background" Value="{StaticResource ModernDisabledBackgroundBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource ModernDisabledForegroundBrush}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource ModernBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource ModernAccentBrush}"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource ModernControlMouseOverBrush}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="ListView">
