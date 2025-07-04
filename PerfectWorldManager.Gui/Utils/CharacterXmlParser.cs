@@ -61,7 +61,11 @@ namespace PerfectWorldManager.Gui.Utils
             // In the new XML, each actual inventory item is an <items> tag directly under <pocket> or <storehouse>
             if (sectionElement.Name == "pocket" || sectionElement.Name == "storehouse")
             {
-                foreach (XElement itemNode in sectionElement.Elements("items")) // Each <items> tag is an individual item
+                // Check for both "items" and "inv" tags as different servers might use different formats
+                var itemNodes = sectionElement.Elements("items").Concat(sectionElement.Elements("inv")).ToList();
+                System.Diagnostics.Debug.WriteLine($"Found {itemNodes.Count} items in {sectionElement.Name}");
+                
+                foreach (XElement itemNode in itemNodes) // Each <items> or <inv> tag is an individual item
                 {
                     var invItemVm = new InventoryItemVm();
                     // The variables of the item are direct children of this <items> node
@@ -87,7 +91,10 @@ namespace PerfectWorldManager.Gui.Utils
             if (equipmentElement == null || equipmentVm == null) return;
 
             // Equipment items are direct <inv> children
-            foreach (XElement invElement in equipmentElement.Elements("inv"))
+            var invElements = equipmentElement.Elements("inv").ToList();
+            System.Diagnostics.Debug.WriteLine($"Found {invElements.Count} equipment items");
+            
+            foreach (XElement invElement in invElements)
             {
                 var invItemVm = new InventoryItemVm();
                 foreach (XElement varElement in invElement.Elements("variable"))
