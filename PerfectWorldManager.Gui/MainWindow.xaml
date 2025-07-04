@@ -531,167 +531,125 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{DynamicResource Tab_MapManagement}" x:Name="MapManagementTab">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="20">
-                        <!-- Map Management Header -->
-                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,20">
-                            <StackPanel>
-                                <TextBlock Text="Map Management" FontSize="20" FontWeight="Bold" 
-                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,10"/>
-                                <TextBlock Text="Configure and manage game world maps. Enable auto-start for maps to launch automatically with the server."
-                                           FontSize="13" Opacity="0.8" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </Border>
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                        <!-- Quick Actions -->
-                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,20">
-                            <StackPanel>
-                                <TextBlock Text="Quick Actions" FontSize="16" FontWeight="SemiBold" 
-                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,12"/>
-                                <WrapPanel>
-                                    <Button Content="{DynamicResource Maps_AddNewMap}" 
-                                            x:Name="AddNewMapButton" 
-                                            Click="AddNewMapButton_Click" 
-                                            Margin="0,0,8,8" 
-                                            Padding="12,8"
-                                            Style="{StaticResource AccentButtonStyle}"/>
-                                    <Button Content="{DynamicResource Maps_DeleteSelectedMap}" 
-                                            x:Name="DeleteMapButton" 
-                                            Click="DeleteMapButton_Click" 
-                                            Margin="0,0,8,8" 
-                                            Padding="12,8"
-                                            Background="{StaticResource ModernErrorBrush}"/>
-                                    <Button Content="{DynamicResource Maps_SaveMapConfigs}" 
-                                            x:Name="SaveMapConfigurationsButton" 
-                                            Click="SaveMapConfigurationsButton_Click" 
-                                            Margin="0,0,8,8" 
-                                            Padding="12,8"
-                                            Background="{StaticResource ModernSuccessBrush}"/>
-                                    <Button Content="{DynamicResource Maps_ReloadAndRefresh}" 
-                                            x:Name="ReloadMapsListButton" 
-                                            Click="ReloadMapsListButton_Click" 
-                                            Margin="0,0,8,8"
-                                            Padding="12,8"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Maps List -->
-                        <Border Style="{StaticResource ModernCard}">
-                            <StackPanel>
-                                <TextBlock Text="Configured Maps" FontSize="16" FontWeight="SemiBold" 
-                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,12"/>
-                                
-                                <Border BorderBrush="{StaticResource ModernBorderBrush}" BorderThickness="1" CornerRadius="4">
-                                    <DataGrid x:Name="MapsDataGrid" 
-                                              ItemsSource="{Binding DisplayableMaps}" 
-                                              AutoGenerateColumns="False" 
-                                              CanUserAddRows="False" 
-                                              CanUserDeleteRows="False" 
-                                              SelectionMode="Single"
-                                              HeadersVisibility="Column" 
-                                              GridLinesVisibility="Horizontal" 
-                                              BorderThickness="0"
-                                              Background="Transparent"
-                                              RowHeight="40"
-                                              ColumnHeaderHeight="45"
-                                              FontSize="13"
-                                              MinHeight="400">
-                                        <DataGrid.Resources>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="Padding" Value="10,5"/>
-                                                <Setter Property="BorderThickness" Value="0"/>
-                                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                                            </Style>
-                                            <Style TargetType="DataGridColumnHeader">
-                                                <Setter Property="Padding" Value="10,10"/>
-                                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                                <Setter Property="FontSize" Value="13"/>
-                                                <Setter Property="Background" Value="{StaticResource ModernLighterBackgroundBrush}"/>
-                                                <Setter Property="Foreground" Value="{StaticResource ModernForegroundBrush}"/>
-                                                <Setter Property="BorderBrush" Value="{StaticResource ModernBorderBrush}"/>
-                                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                            </Style>
-                                            <Style TargetType="CheckBox">
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                            </Style>
-                                        </DataGrid.Resources>
-                                        <DataGrid.Columns>
-                                            <DataGridCheckBoxColumn Header="{DynamicResource Maps_Col_AutoStart}" 
-                                                                    Binding="{Binding IsEnabledForAutoStart, Mode=TwoWay}" 
-                                                                    Width="100"/>
-                                            <DataGridTextColumn Header="{DynamicResource Maps_Col_MapID}" 
-                                                                Binding="{Binding MapId, Mode=TwoWay}" 
-                                                                Width="100">
-                                                <DataGridTextColumn.ElementStyle>
-                                                    <Style TargetType="TextBlock">
-                                                        <Setter Property="FontWeight" Value="SemiBold"/>
-                                                        <Setter Property="Foreground" Value="{StaticResource ModernAccentBrush}"/>
-                                                    </Style>
-                                                </DataGridTextColumn.ElementStyle>
-                                            </DataGridTextColumn>
-                                            <DataGridTextColumn Header="{DynamicResource Maps_Col_MapName}" 
-                                                                Binding="{Binding MapName, Mode=TwoWay}" 
-                                                                Width="*" 
-                                                                MinWidth="200"/>
-                                            <DataGridTemplateColumn Header="{DynamicResource Maps_Col_CurrentStatus}" 
-                                                                    Width="120" 
-                                                                    IsReadOnly="True">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border Padding="6,3" CornerRadius="3" HorizontalAlignment="Center">
-                                                            <Border.Style>
-                                                                <Style TargetType="Border">
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsCurrentlyRunning}" Value="True">
-                                                                            <Setter Property="Background" Value="{StaticResource ModernSuccessBrush}"/>
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding IsCurrentlyRunning}" Value="False">
-                                                                            <Setter Property="Background" Value="{StaticResource ModernErrorBrush}"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </Border.Style>
-                                                            <TextBlock Text="{Binding IsCurrentlyRunning, Converter={StaticResource BooleanToRunningStatusConverter}}" 
-                                                                       FontSize="11" 
-                                                                       FontWeight="SemiBold" 
-                                                                       Foreground="White"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn Header="{DynamicResource Maps_Col_Actions}" 
-                                                                    Width="180">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                            <Button Content="{DynamicResource Maps_Start}" 
-                                                                    CommandParameter="{Binding}" 
-                                                                    Click="StartIndividualMapButton_Click" 
-                                                                    IsEnabled="{Binding IsCurrentlyRunning, Converter={StaticResource InverseBooleanConverter}}" 
-                                                                    Margin="0,0,5,0" 
-                                                                    Padding="8,4"
-                                                                    FontSize="12"
-                                                                    Background="{StaticResource ModernSuccessBrush}"/>
-                                                            <Button Content="{DynamicResource Maps_Stop}" 
-                                                                    CommandParameter="{Binding}" 
-                                                                    Click="StopIndividualMapButton_Click" 
-                                                                    IsEnabled="{Binding IsCurrentlyRunning}" 
-                                                                    Padding="8,4"
-                                                                    FontSize="12"
-                                                                    Background="{StaticResource ModernErrorBrush}"/>
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </Border>
-                            </StackPanel>
-                        </Border>
+                    <!-- Header -->
+                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                        <TextBlock Text="Map Management" FontSize="18" FontWeight="SemiBold" 
+                                   Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,5"/>
+                        <TextBlock Text="Configure and manage game world maps. Enable auto-start for maps to launch automatically with the server."
+                                   FontSize="12" Opacity="0.7" TextWrapping="Wrap"/>
                     </StackPanel>
-                </ScrollViewer>
+
+                    <!-- Action Buttons -->
+                    <WrapPanel Grid.Row="1" Margin="0,0,0,10">
+                        <Button Content="{DynamicResource Maps_AddNewMap}" 
+                                x:Name="AddNewMapButton" 
+                                Click="AddNewMapButton_Click" 
+                                Margin="0,0,5,0" 
+                                Padding="10,6"
+                                Style="{StaticResource AccentButtonStyle}"/>
+                        <Button Content="{DynamicResource Maps_DeleteSelectedMap}" 
+                                x:Name="DeleteMapButton" 
+                                Click="DeleteMapButton_Click" 
+                                Margin="0,0,5,0" 
+                                Padding="10,6"
+                                Background="{StaticResource ModernErrorBrush}"/>
+                        <Button Content="{DynamicResource Maps_SaveMapConfigs}" 
+                                x:Name="SaveMapConfigurationsButton" 
+                                Click="SaveMapConfigurationsButton_Click" 
+                                Margin="0,0,5,0" 
+                                Padding="10,6"
+                                Background="{StaticResource ModernSuccessBrush}"/>
+                        <Button Content="{DynamicResource Maps_ReloadAndRefresh}" 
+                                x:Name="ReloadMapsListButton" 
+                                Click="ReloadMapsListButton_Click" 
+                                Padding="10,6"/>
+                    </WrapPanel>
+
+                    <!-- DataGrid -->
+                    <Border Grid.Row="2" BorderBrush="{StaticResource ModernBorderBrush}" BorderThickness="1">
+                        <DataGrid x:Name="MapsDataGrid" 
+                                  ItemsSource="{Binding DisplayableMaps}" 
+                                  AutoGenerateColumns="False" 
+                                  CanUserAddRows="False" 
+                                  CanUserDeleteRows="False" 
+                                  SelectionMode="Single"
+                                  HeadersVisibility="Column" 
+                                  GridLinesVisibility="Horizontal" 
+                                  BorderThickness="0"
+                                  Background="{StaticResource ModernBackgroundBrush}"
+                                  RowHeight="35"
+                                  FontSize="13">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn Header="{DynamicResource Maps_Col_AutoStart}" 
+                                                        Binding="{Binding IsEnabledForAutoStart, Mode=TwoWay}" 
+                                                        Width="100"/>
+                                <DataGridTextColumn Header="{DynamicResource Maps_Col_MapID}" 
+                                                    Binding="{Binding MapId, Mode=TwoWay}" 
+                                                    Width="100"/>
+                                <DataGridTextColumn Header="{DynamicResource Maps_Col_MapName}" 
+                                                    Binding="{Binding MapName, Mode=TwoWay}" 
+                                                    Width="*" 
+                                                    MinWidth="150"/>
+                                <DataGridTemplateColumn Header="{DynamicResource Maps_Col_CurrentStatus}" 
+                                                        Width="120" 
+                                                        IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding IsCurrentlyRunning, Converter={StaticResource BooleanToRunningStatusConverter}}" 
+                                                       VerticalAlignment="Center" 
+                                                       HorizontalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsCurrentlyRunning}" Value="True">
+                                                                <Setter Property="Foreground" Value="{StaticResource ModernSuccessBrush}"/>
+                                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding IsCurrentlyRunning}" Value="False">
+                                                                <Setter Property="Foreground" Value="{StaticResource ModernErrorBrush}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{DynamicResource Maps_Col_Actions}" 
+                                                        Width="150">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Button Content="{DynamicResource Maps_Start}" 
+                                                        CommandParameter="{Binding}" 
+                                                        Click="StartIndividualMapButton_Click" 
+                                                        IsEnabled="{Binding IsCurrentlyRunning, Converter={StaticResource InverseBooleanConverter}}" 
+                                                        Margin="0,0,5,0" 
+                                                        Padding="5,3"
+                                                        FontSize="11"
+                                                        Background="{StaticResource ModernSuccessBrush}"/>
+                                                <Button Content="{DynamicResource Maps_Stop}" 
+                                                        CommandParameter="{Binding}" 
+                                                        Click="StopIndividualMapButton_Click" 
+                                                        IsEnabled="{Binding IsCurrentlyRunning}" 
+                                                        Padding="5,3"
+                                                        FontSize="11"
+                                                        Background="{StaticResource ModernErrorBrush}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+                </Grid>
             </TabItem>
 
             <TabItem Header="{DynamicResource Tab_CharacterEditor}" x:Name="CharacterEditorTab">
