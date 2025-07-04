@@ -56,6 +56,7 @@ namespace PerfectWorldManager.Core.Models
                 ItemName = itemLookupService.GetItemName(ItemId, settings.ItemTxtPath);
                 IconPath = itemLookupService.GetItemIconPath(ItemId, settings.ItemIconsPath);
                 // The actual loading of BitmapImage from IconPath will now happen in XAML via a converter.
+                System.Diagnostics.Debug.WriteLine($"Item {ItemId}: Name='{ItemName}', IconPath='{IconPath}'");
             }
         }
     }

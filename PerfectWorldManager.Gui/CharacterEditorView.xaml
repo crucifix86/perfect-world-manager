@@ -107,11 +107,15 @@
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate DataType="{x:Type models:InventoryItemVm}">
                                                             <Border BorderBrush="DarkGray" BorderThickness="1" Margin="1" Background="#44000000">
-                                                                <Image Source="{Binding IconPath, Converter={StaticResource PathToImageConverter}}" Width="38" Height="38" Margin="2" ToolTip="{Binding ItemName}" Cursor="Hand">
-                                                                    <Image.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.SelectInventoryItemCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}"/>
-                                                                    </Image.InputBindings>
-                                                                </Image>
+                                                                <Grid Width="38" Height="38" Margin="2">
+                                                                    <Rectangle Fill="Gray" Opacity="0.3"/>
+                                                                    <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20"/>
+                                                                    <Image Source="{Binding IconPath, Converter={StaticResource PathToImageConverter}}" ToolTip="{Binding ItemName}" Cursor="Hand">
+                                                                        <Image.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.SelectInventoryItemCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}"/>
+                                                                        </Image.InputBindings>
+                                                                    </Image>
+                                                                </Grid>
                                                             </Border>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
@@ -134,11 +138,15 @@
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate DataType="{x:Type models:InventoryItemVm}">
                                                             <Border BorderBrush="DarkGray" BorderThickness="1" Margin="1" Background="#44000000">
-                                                                <Image Source="{Binding IconPath, Converter={StaticResource PathToImageConverter}}" Width="38" Height="38" Margin="2" ToolTip="{Binding ItemName}" Cursor="Hand">
-                                                                    <Image.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.SelectInventoryItemCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}"/>
-                                                                    </Image.InputBindings>
-                                                                </Image>
+                                                                <Grid Width="38" Height="38" Margin="2">
+                                                                    <Rectangle Fill="Gray" Opacity="0.3"/>
+                                                                    <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20"/>
+                                                                    <Image Source="{Binding IconPath, Converter={StaticResource PathToImageConverter}}" ToolTip="{Binding ItemName}" Cursor="Hand">
+                                                                        <Image.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.SelectInventoryItemCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}"/>
+                                                                        </Image.InputBindings>
+                                                                    </Image>
+                                                                </Grid>
                                                             </Border>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
@@ -161,11 +169,15 @@
                                                     <ItemsControl.ItemTemplate>
                                                         <DataTemplate DataType="{x:Type models:InventoryItemVm}">
                                                             <Border BorderBrush="DarkGray" BorderThickness="1" Margin="1" Background="#44000000">
-                                                                <Image Source="{Binding IconPath, Converter={StaticResource PathToImageConverter}}" Width="38" Height="38" Margin="2" ToolTip="{Binding ItemName}" Cursor="Hand">
-                                                                    <Image.InputBindings>
-                                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.SelectInventoryItemCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}"/>
-                                                                    </Image.InputBindings>
-                                                                </Image>
+                                                                <Grid Width="38" Height="38" Margin="2">
+                                                                    <Rectangle Fill="Gray" Opacity="0.3"/>
+                                                                    <TextBlock Text="?" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20"/>
+                                                                    <Image Source="{Binding IconPath, Converter={StaticResource PathToImageConverter}}" ToolTip="{Binding ItemName}" Cursor="Hand">
+                                                                        <Image.InputBindings>
+                                                                            <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.SelectInventoryItemCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}"/>
+                                                                        </Image.InputBindings>
+                                                                    </Image>
+                                                                </Grid>
                                                             </Border>
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
