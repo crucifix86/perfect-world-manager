@@ -102,6 +102,18 @@ namespace PerfectWorldManager.Gui.Dialogs
             {
                 ActivePresetName = presetName;
             }
+            
+            // Update button states and description
+            if (comboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            {
+                var updateButton = this.FindName("UpdatePresetButton") as System.Windows.Controls.Button;
+                var deleteButton = this.FindName("DeletePresetButton") as System.Windows.Controls.Button;
+                var descriptionText = this.FindName("PresetDescriptionText") as System.Windows.Controls.TextBlock;
+                
+                if (updateButton != null) updateButton.IsEnabled = !selectedPreset.IsReadOnly;
+                if (deleteButton != null) deleteButton.IsEnabled = !selectedPreset.IsReadOnly;
+                if (descriptionText != null) descriptionText.Text = selectedPreset.Description;
+            }
         }
         
         private void LoadPresetButton_Click(object sender, RoutedEventArgs e)

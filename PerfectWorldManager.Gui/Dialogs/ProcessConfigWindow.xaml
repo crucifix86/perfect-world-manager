@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:converters="clr-namespace:PerfectWorldManager.Gui.Converters"
         mc:Ignorable="d"
         Title="Process Configurations" 
         Height="600" 
@@ -13,10 +12,6 @@
         AllowsTransparency="True" 
         Background="Transparent"
         ResizeMode="CanResizeWithGrip">
-    
-    <Window.Resources>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-    </Window.Resources>
     
     <Border BorderBrush="{StaticResource ModernBorderBrush}" BorderThickness="1" Background="{StaticResource ModernBackgroundBrush}">
         <Grid>
@@ -83,15 +78,13 @@
                                 Click="LoadPresetButton_Click" ToolTip="Load the selected preset configuration"/>
                         <Button Content="Save As..." Grid.Column="3" Margin="5,0" Padding="10,5" 
                                 Click="SavePresetAsButton_Click" ToolTip="Save current configuration as a new preset"/>
-                        <Button Content="Update" Grid.Column="4" Margin="5,0" Padding="10,5" 
-                                Click="UpdatePresetButton_Click" ToolTip="Update the current preset with current configuration"
-                                IsEnabled="{Binding ElementName=PresetComboBox, Path=SelectedItem.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"/>
-                        <Button Content="Delete" Grid.Column="5" Margin="5,0" Padding="10,5" 
+                        <Button x:Name="UpdatePresetButton" Content="Update" Grid.Column="4" Margin="5,0" Padding="10,5" 
+                                Click="UpdatePresetButton_Click" ToolTip="Update the current preset with current configuration"/>
+                        <Button x:Name="DeletePresetButton" Content="Delete" Grid.Column="5" Margin="5,0" Padding="10,5" 
                                 Click="DeletePresetButton_Click" ToolTip="Delete the selected preset"
-                                Background="{DynamicResource ModernErrorBrush}"
-                                IsEnabled="{Binding ElementName=PresetComboBox, Path=SelectedItem.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"/>
+                                Background="{DynamicResource ModernErrorBrush}"/>
                         
-                        <TextBlock Grid.Column="6" Text="{Binding ElementName=PresetComboBox, Path=SelectedItem.Description}" 
+                        <TextBlock x:Name="PresetDescriptionText" Grid.Column="6" 
                                    VerticalAlignment="Center" Margin="10,0,0,0" FontStyle="Italic" Opacity="0.7"/>
                     </Grid>
                 </Border>
