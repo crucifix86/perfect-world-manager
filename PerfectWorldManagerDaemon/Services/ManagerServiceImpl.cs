@@ -303,7 +303,9 @@ namespace PerfectWorldManagerDaemon.Services
                 {
                     FileName = "pgrep",
                     Arguments = $"-f \"{request.StatusCheckPattern.Replace("\"", "\\\"")}\"",
-                    UseShellExecute = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     CreateNoWindow = true,
                 };
                 _logger.LogInformation($"Executing: {pgrepPsi.FileName} {pgrepPsi.Arguments}");
@@ -318,24 +320,38 @@ namespace PerfectWorldManagerDaemon.Services
                     }
                     else
                     {
+                        string output = process.StandardOutput.ReadToEnd().Trim();
                         process.WaitForExit();
 
                         if (process.ExitCode == 0)
                         {
                             response.Status = ProcessStatusResponse.Types.Status.Running;
-                            response.Details = $"Process is running (pgrep exit code 0 for pattern '{request.StatusCheckPattern}')";
-                            _logger.LogInformation($"Process '{request.StatusCheckPattern}' is RUNNING.");
+                            // Parse PIDs from output
+                            var pids = output.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (pids.Length == 1)
+                            {
+                                response.Details = $"PID: {pids[0]}";
+                            }
+                            else if (pids.Length > 1)
+                            {
+                                response.Details = $"PIDs: {string.Join(", ", pids)}";
+                            }
+                            else
+                            {
+                                response.Details = "Process is running";
+                            }
+                            _logger.LogInformation($"Process '{request.StatusCheckPattern}' is RUNNING. PIDs: {output}");
                         }
                         else if (process.ExitCode == 1)
                         {
                             response.Status = ProcessStatusResponse.Types.Status.Stopped;
-                            response.Details = $"Process is not running (pgrep exit code 1 for pattern '{request.StatusCheckPattern}')";
+                            response.Details = "Not running";
                             _logger.LogInformation($"Process '{request.StatusCheckPattern}' is STOPPED (pgrep found no match).");
                         }
                         else
                         {
                             response.Status = ProcessStatusResponse.Types.Status.Error;
-                            response.Details = $"Error checking status via pgrep. ExitCode: {process.ExitCode}.";
+                            response.Details = $"Error checking status. Exit code: {process.ExitCode}";
                             _logger.LogError($"pgrep failed for '{request.StatusCheckPattern}'. {response.Details}");
                         }
                     }

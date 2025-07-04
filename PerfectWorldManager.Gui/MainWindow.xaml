@@ -133,7 +133,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="{DynamicResource Dashboard_Details}" Width="200" DisplayMemberBinding="{Binding StatusDetails}"/>
+                                <GridViewColumn Header="PID" Width="200" DisplayMemberBinding="{Binding StatusDetails}"/>
                                 <GridViewColumn Header="{DynamicResource Dashboard_Actions}" Width="150">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
