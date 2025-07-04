@@ -195,152 +195,265 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{DynamicResource Tab_Settings}" x:Name="SettingsTab">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
-                    <StackPanel Margin="10" Name="SettingsPanel">
-
-                        <TextBlock Text="{DynamicResource Settings_DaemonServiceSettings}" FontWeight="Bold" Margin="0,0,0,5"/>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Content="{DynamicResource Settings_DaemonServiceUrl}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="DaemonUrlTextBox" Grid.Row="0" Grid.Column="1" Margin="5" ToolTip="URL of the Perfect World Manager Daemon service (e.g., http://localhost:50051)" Text="{Binding AppSettings.DaemonServiceUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <Label Content="{DynamicResource Settings_ApiKey}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="ApiKeyTextBox" Grid.Row="1" Grid.Column="1" Margin="5" ToolTip="API Key for authenticating with the daemon." Text="{Binding AppSettings.ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Button Name="GenerateApiKeyButton" Content="{DynamicResource Settings_GenerateApiKey}" Grid.Row="1" Grid.Column="2" Margin="5" Padding="5,2" Click="GenerateApiKeyButton_Click" VerticalAlignment="Center"/>
-                            
-                            <CheckBox Name="AutoConnectCheckBox" Grid.Row="2" Grid.Column="1" Margin="5" 
-                                      Content="Connect automatically on startup" 
-                                      IsChecked="{Binding AppSettings.AutoConnectToDaemon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      ToolTip="Automatically connect to the daemon when the application starts"/>
-                        </Grid>
-
-                        <TextBlock Text="{DynamicResource Settings_ApplicationSettings}" FontWeight="Bold" Margin="0,10,0,5"/>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Content="{DynamicResource Settings_Language}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                            <ComboBox Name="LanguageSelectorComboBox" Grid.Row="0" Grid.Column="1" Width="200" Margin="5,2" SelectionChanged="LanguageSelectorComboBox_SelectionChanged" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                <ComboBoxItem Content="English" Tag="en-US"/>
-                                <ComboBoxItem Content="Bahasa Indonesia" Tag="id-ID"/>
-                                <ComboBoxItem Content="Русский" Tag="ru-RU"/>
-                                <ComboBoxItem Content="Português" Tag="pt-PT"/>
-                            </ComboBox>
-                        </Grid>
-
-                        <TextBlock Text="{DynamicResource Settings_ServerPathSettings}" FontWeight="Bold" Margin="0,10,0,5"/>
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,5" FontStyle="Italic" FontSize="11" Text="{DynamicResource Settings_ServerPathSettings_Desc}"/>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Content="{DynamicResource Settings_ServerBaseDir}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="ServerDirTextBox" Grid.Row="0" Grid.Column="1" Margin="5,2" ToolTip="Path on the server, used as context for daemon operations." Text="{Binding AppSettings.ServerDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <Label Content="{DynamicResource Settings_MapsFilePath}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="MapsFilePathTextBox" Grid.Row="1" Grid.Column="1" Margin="5,2" ToolTip="Path to the local 'user_maps.csv' used by this client for map definitions." Text="{Binding AppSettings.MapsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <Label Content="{DynamicResource Settings_LogsDir}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="LogsDirTextBox" Grid.Row="2" Grid.Column="1" Margin="5,2" ToolTip="Path on the server where daemon stores logs for processes it starts." Text="{Binding AppSettings.LogsDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <Label Content="{DynamicResource Settings_PwAdminDir}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="PwAdminDirTextBox" Grid.Row="3" Grid.Column="1" Margin="5,2" ToolTip="Path to PWAdmin related utilities on the server (e.g., for updater script)." Text="{Binding AppSettings.PwAdminDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <Label Content="{DynamicResource Settings_PwAdminUrl}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="PwAdminUrlTextBox" Grid.Row="4" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.PwAdminUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <Label Content="{DynamicResource Settings_BackupStorageDir}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="BackupStorageDirTextBox" Grid.Row="5" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.BackupStorageDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </Grid>
-
-                        <TextBlock Text="{DynamicResource Settings_CharEditorPaths}" FontWeight="Bold" Margin="0,10,0,5"/>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Content="{DynamicResource Settings_ItemTxtPath}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="ItemTxtPathTextBox" Grid.Row="0" Grid.Column="1" Margin="5,2" ToolTip="Full path to your item.txt file (used by Character Editor GUI)" Text="{Binding AppSettings.ItemTxtPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <Label Content="{DynamicResource Settings_ItemIconsPath}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="ItemIconsPathTextBox" Grid.Row="1" Grid.Column="1" Margin="5,2" ToolTip="Full path to the directory containing item icons (used by Character Editor GUI)" Text="{Binding AppSettings.ItemIconsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </Grid>
-
-                        <TextBlock Text="{DynamicResource Settings_MySQLSettings}" FontWeight="Bold" Margin="0,10,0,5"/>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Label Content="{DynamicResource Settings_MySQLHost}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="MySqlHostTextBox" Grid.Row="0" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Label Content="{DynamicResource Settings_MySQLPort}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="MySqlPortTextBox" Grid.Row="1" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Label Content="{DynamicResource Settings_MySQLUser}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="MySqlUserTextBox" Grid.Row="2" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Label Content="{DynamicResource Settings_MySQLPassword}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-                            <PasswordBox Name="MySqlPasswordBox" Grid.Row="3" Grid.Column="1" Margin="5,2"/>
-                            <Label Content="{DynamicResource Settings_MySQLDatabase}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-                            <TextBox Name="MySqlDatabaseTextBox" Grid.Row="4" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </Grid>
-
-                        <Separator Margin="0,15,0,10"/>
-                        <TextBlock Text="{DynamicResource Settings_ProcessConfigs}" FontWeight="Bold" Margin="0,0,0,5"/>
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" FontStyle="Italic" FontSize="11" Text="{DynamicResource Settings_ProcessConfigs_Desc}"/>
-                        
-                        <!-- Process Configurations Button -->
-                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="15">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20">
+                        <!-- Settings Header -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,20">
                             <StackPanel>
+                                <TextBlock Text="Application Settings" FontSize="20" FontWeight="Bold" 
+                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,10"/>
+                                <TextBlock Text="Configure daemon connection, server paths, database settings, and process management options."
+                                           FontSize="13" Opacity="0.8" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Daemon Service Settings -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Settings_DaemonServiceSettings}" FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,12"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_DaemonServiceUrl}" Grid.Row="0" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Name="DaemonUrlTextBox" Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="URL of the Perfect World Manager Daemon service (e.g., http://localhost:50051)" 
+                                             Text="{Binding AppSettings.DaemonServiceUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="{DynamicResource Settings_ApiKey}" Grid.Row="1" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,10,0,0"/>
+                                    <TextBox Name="ApiKeyTextBox" Grid.Row="1" Grid.Column="1" Margin="5,10,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="API Key for authenticating with the daemon." 
+                                             Text="{Binding AppSettings.ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Name="GenerateApiKeyButton" Content="{DynamicResource Settings_GenerateApiKey}" 
+                                            Grid.Row="1" Grid.Column="2" Margin="5,10,0,5" Padding="12,6" 
+                                            Click="GenerateApiKeyButton_Click" VerticalAlignment="Center"/>
+                                    
+                                    <CheckBox Name="AutoConnectCheckBox" Grid.Row="2" Grid.Column="1" Margin="5,10,5,0" 
+                                              Content="Connect automatically on startup" FontSize="13"
+                                              IsChecked="{Binding AppSettings.AutoConnectToDaemon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              ToolTip="Automatically connect to the daemon when the application starts"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Application Settings -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Settings_ApplicationSettings}" FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,12"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_Language}" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13"/>
+                                    <ComboBox Name="LanguageSelectorComboBox" Grid.Column="1" Width="250" 
+                                              Margin="5" Padding="8,6" FontSize="13"
+                                              SelectionChanged="LanguageSelectorComboBox_SelectionChanged" 
+                                              VerticalAlignment="Center" HorizontalAlignment="Left">
+                                        <ComboBoxItem Content="English" Tag="en-US"/>
+                                        <ComboBoxItem Content="Bahasa Indonesia" Tag="id-ID"/>
+                                        <ComboBoxItem Content="Русский" Tag="ru-RU"/>
+                                        <ComboBoxItem Content="Português" Tag="pt-PT"/>
+                                    </ComboBox>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Server Path Settings -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Settings_ServerPathSettings}" FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{DynamicResource Settings_ServerPathSettings_Desc}" 
+                                           FontSize="12" Opacity="0.7" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_ServerBaseDir}" Grid.Row="0" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Name="ServerDirTextBox" Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="Path on the server, used as context for daemon operations." 
+                                             Text="{Binding AppSettings.ServerDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="{DynamicResource Settings_MapsFilePath}" Grid.Row="1" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="MapsFilePathTextBox" Grid.Row="1" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="Path to the local 'user_maps.csv' used by this client for map definitions." 
+                                             Text="{Binding AppSettings.MapsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="{DynamicResource Settings_LogsDir}" Grid.Row="2" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="LogsDirTextBox" Grid.Row="2" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="Path on the server where daemon stores logs for processes it starts." 
+                                             Text="{Binding AppSettings.LogsDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="{DynamicResource Settings_PwAdminDir}" Grid.Row="3" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="PwAdminDirTextBox" Grid.Row="3" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="Path to PWAdmin related utilities on the server (e.g., for updater script)." 
+                                             Text="{Binding AppSettings.PwAdminDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="{DynamicResource Settings_PwAdminUrl}" Grid.Row="4" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="PwAdminUrlTextBox" Grid.Row="4" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             Text="{Binding AppSettings.PwAdminUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="{DynamicResource Settings_BackupStorageDir}" Grid.Row="5" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="BackupStorageDirTextBox" Grid.Row="5" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             Text="{Binding AppSettings.BackupStorageDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Character Editor Paths -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Settings_CharEditorPaths}" FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,12"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_ItemTxtPath}" Grid.Row="0" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Name="ItemTxtPathTextBox" Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="Full path to your item.txt file (used by Character Editor GUI)" 
+                                             Text="{Binding AppSettings.ItemTxtPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="{DynamicResource Settings_ItemIconsPath}" Grid.Row="1" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="ItemIconsPathTextBox" Grid.Row="1" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             ToolTip="Full path to the directory containing item icons (used by Character Editor GUI)" 
+                                             Text="{Binding AppSettings.ItemIconsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- MySQL Settings -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Settings_MySQLSettings}" FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,12"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_MySQLHost}" Grid.Row="0" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBox Name="MySqlHostTextBox" Grid.Row="0" Grid.Column="1" Margin="5" 
+                                             Padding="8,6" FontSize="13"
+                                             Text="{Binding AppSettings.MySqlHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_MySQLPort}" Grid.Row="1" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="MySqlPortTextBox" Grid.Row="1" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             Text="{Binding AppSettings.MySqlPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_MySQLUser}" Grid.Row="2" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="MySqlUserTextBox" Grid.Row="2" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             Text="{Binding AppSettings.MySqlUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_MySQLPassword}" Grid.Row="3" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <PasswordBox Name="MySqlPasswordBox" Grid.Row="3" Grid.Column="1" Margin="5,8,5,5" 
+                                                 Padding="8,6" FontSize="13"/>
+                                    
+                                    <TextBlock Text="{DynamicResource Settings_MySQLDatabase}" Grid.Row="4" Grid.Column="0" 
+                                               VerticalAlignment="Center" FontSize="13" Margin="0,8,0,0"/>
+                                    <TextBox Name="MySqlDatabaseTextBox" Grid.Row="4" Grid.Column="1" Margin="5,8,5,5" 
+                                             Padding="8,6" FontSize="13"
+                                             Text="{Binding AppSettings.MySqlDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Process Configurations -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Settings_ProcessConfigs}" FontSize="16" FontWeight="SemiBold" 
+                                           Foreground="{StaticResource ModernAccentBrush}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{DynamicResource Settings_ProcessConfigs_Desc}" 
+                                           FontSize="12" Opacity="0.7" Margin="0,0,0,12" TextWrapping="Wrap"/>
                                 <TextBlock Text="Process configurations control how server processes are started and monitored." 
-                                           TextWrapping="Wrap" Margin="0,0,0,10" Opacity="0.8"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Active Preset: " VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                           TextWrapping="Wrap" Margin="0,0,0,10" FontSize="13"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <TextBlock Text="Active Preset: " VerticalAlignment="Center" FontWeight="SemiBold" FontSize="13"/>
                                     <TextBlock Text="{Binding AppSettings.ActivePresetName}" VerticalAlignment="Center" 
-                                               Foreground="{StaticResource ModernAccentBrush}" FontWeight="SemiBold" Margin="5,0"/>
+                                               Foreground="{StaticResource ModernAccentBrush}" FontWeight="SemiBold" 
+                                               FontSize="13" Margin="5,0"/>
                                 </StackPanel>
                                 <Button Content="Manage Process Configurations" 
                                         Click="OpenProcessConfigWindow_Click" 
                                         Padding="15,10" 
-                                        Margin="0,10,0,0"
                                         HorizontalAlignment="Left"
                                         Style="{StaticResource AccentButtonStyle}"
                                         ToolTip="Open the process configuration manager to edit settings and manage presets"/>
                             </StackPanel>
                         </Border>
-                        <Button Content="{DynamicResource Settings_SaveButton}" x:Name="SaveSettingsButton" Margin="0,10,0,10" Padding="10,5" HorizontalAlignment="Left" Click="SaveSettings_Click"/>
+                        
+                        <!-- Save Button -->
+                        <Button Content="{DynamicResource Settings_SaveButton}" 
+                                x:Name="SaveSettingsButton" 
+                                Margin="0,20,0,20" 
+                                Padding="20,12" 
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Click="SaveSettings_Click"
+                                Style="{StaticResource AccentButtonStyle}"/>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
