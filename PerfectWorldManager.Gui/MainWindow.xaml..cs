@@ -838,7 +838,7 @@ namespace PerfectWorldManager.Gui
                         // Load first page of all characters if not already loaded
                         if (_characterEditorViewModel?.AllCharactersList.Count == 0 && _characterEditorViewModel?.CurrentPage == 1)
                         {
-                            _ = _characterEditorViewModel.RefreshAllCharactersCommand.Execute(null);
+                            _characterEditorViewModel.RefreshAllCharactersCommand.Execute(null);
                         }
                     }
                     else if (selectedTab == AccountsTabItem && (_dbService != null))
