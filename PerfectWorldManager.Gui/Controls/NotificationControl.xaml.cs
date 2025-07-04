@@ -45,7 +45,7 @@ namespace PerfectWorldManager.Gui.Controls
             SetNotificationType(type);
             
             var slideIn = FindResource("SlideIn") as Storyboard;
-            slideIn?.Begin();
+            slideIn?.Begin(this);
             
             autoCloseTimer.Start();
         }
@@ -106,7 +106,7 @@ namespace PerfectWorldManager.Gui.Controls
                         parent.Children.Remove(this);
                     }
                 };
-                slideOut.Begin();
+                slideOut.Begin(this);
             }
         }
     }

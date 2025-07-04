@@ -7,24 +7,28 @@
              d:DesignHeight="80" d:DesignWidth="400">
     <UserControl.Resources>
         <Storyboard x:Key="SlideIn">
-            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+            <DoubleAnimation Storyboard.TargetName="NotificationBorder"
+                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                            From="400" To="0" Duration="0:0:0.3">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseOut"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+            <DoubleAnimation Storyboard.TargetName="NotificationBorder"
+                           Storyboard.TargetProperty="Opacity"
                            From="0" To="1" Duration="0:0:0.3"/>
         </Storyboard>
         
         <Storyboard x:Key="SlideOut">
-            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+            <DoubleAnimation Storyboard.TargetName="NotificationBorder"
+                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                            From="0" To="400" Duration="0:0:0.3">
                 <DoubleAnimation.EasingFunction>
                     <CubicEase EasingMode="EaseIn"/>
                 </DoubleAnimation.EasingFunction>
             </DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+            <DoubleAnimation Storyboard.TargetName="NotificationBorder"
+                           Storyboard.TargetProperty="Opacity"
                            From="1" To="0" Duration="0:0:0.3"/>
         </Storyboard>
     </UserControl.Resources>
