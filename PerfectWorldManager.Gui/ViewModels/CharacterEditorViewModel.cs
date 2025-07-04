@@ -69,7 +69,7 @@ namespace PerfectWorldManager.Gui.ViewModels
             set => SetProperty(ref _statusMessage, value, nameof(StatusMessage));
         }
 
-        private bool _isLoading;
+        private bool _isLoading = false;
         public bool IsLoading
         {
             get => _isLoading;
@@ -117,6 +117,9 @@ namespace PerfectWorldManager.Gui.ViewModels
             _daemonService = daemonService ?? throw new ArgumentNullException(nameof(daemonService));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
             _itemLookupService = itemLookupService ?? throw new ArgumentNullException(nameof(itemLookupService));
+
+            // Ensure IsLoading is false on startup
+            _isLoading = false;
 
             if (_daemonService != null)
             {
