@@ -586,6 +586,27 @@
                                   Background="{StaticResource ModernBackgroundBrush}"
                                   RowHeight="35"
                                   FontSize="13">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource ModernSelectionBrush}"/>
+                                            <Setter Property="Foreground" Value="{StaticResource ModernForegroundBrush}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn Header="{DynamicResource Maps_Col_AutoStart}" 
                                                         Binding="{Binding IsEnabledForAutoStart, Mode=TwoWay}" 
