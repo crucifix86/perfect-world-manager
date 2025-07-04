@@ -450,7 +450,7 @@
             </TabItem>
 
             <TabItem Header="{DynamicResource Tab_CharacterEditor}" x:Name="CharacterEditorTab">
-                <local:CharacterEditorViewRedesigned x:Name="CharacterEditorViewControl"/>
+                <local:CharacterEditorView x:Name="CharacterEditorViewControl"/>
             </TabItem>
 
         </TabControl>

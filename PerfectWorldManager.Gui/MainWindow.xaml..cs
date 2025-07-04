@@ -256,7 +256,7 @@ namespace PerfectWorldManager.Gui
                     _characterEditorViewModel?.Cleanup();
                     IItemLookupService itemLookupService = new ItemLookupService();
                     _characterEditorViewModel = new CharacterEditorViewModel(_daemonService, AppSettings, itemLookupService);
-                    if (this.FindName("CharacterEditorViewControl") is CharacterEditorViewRedesigned cev)
+                    if (this.FindName("CharacterEditorViewControl") is CharacterEditorView cev)
                     {
                         cev.DataContext = _characterEditorViewModel;
                     }
@@ -829,7 +829,7 @@ namespace PerfectWorldManager.Gui
 
                     if (selectedTab == CharacterEditorTabItem)
                     {
-                        if (this.FindName("CharacterEditorViewControl") is CharacterEditorViewRedesigned cev && cev.DataContext != _characterEditorViewModel)
+                        if (this.FindName("CharacterEditorViewControl") is CharacterEditorView cev && cev.DataContext != _characterEditorViewModel)
                         {
                             cev.DataContext = _characterEditorViewModel;
                         }

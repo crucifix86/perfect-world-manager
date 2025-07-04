@@ -172,7 +172,7 @@
             </Border>
             
             <!-- Character Data -->
-            <Grid Visibility="{Binding CurrentCharacterVm, Converter={StaticResource NullToVisibilityConverter}}">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="*"/>
@@ -297,7 +297,7 @@
                 <Border Grid.Column="1" 
                         Style="{StaticResource ModernCard}"
                         Margin="4,4,8,8">
-                    <Grid DataContext="{Binding CurrentCharacterVm}">
+                    <Grid>
                         <!-- Base Info Section -->
                         <ScrollViewer Visibility="{Binding ElementName=BaseInfoRadio, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
                                       VerticalScrollBarVisibility="Auto">
