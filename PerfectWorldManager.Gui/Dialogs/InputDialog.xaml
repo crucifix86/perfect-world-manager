@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Input" Height="180" Width="400"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Background="#FF1E1E1E">
     
     <Grid Margin="15">
         <Grid.RowDefinitions>
@@ -15,17 +16,24 @@
         </Grid.RowDefinitions>
         
         <TextBlock x:Name="PromptTextBlock" Grid.Row="0" Text="Enter value:" 
-                   Margin="0,0,0,10" TextWrapping="Wrap"/>
-        <TextBox x:Name="InputTextBox" Grid.Row="1" Margin="0,0,0,10"/>
+                   Margin="0,0,0,10" TextWrapping="Wrap"
+                   Foreground="White" FontSize="14"/>
+        <TextBox x:Name="InputTextBox" Grid.Row="1" Margin="0,0,0,10"
+                 Background="#FF2D2D30" Foreground="White" BorderBrush="#FF3F3F46"
+                 CaretBrush="White" SelectionBrush="#FF007ACC" Padding="5"/>
         <TextBlock x:Name="DescriptionTextBlock" Grid.Row="2" 
                    FontSize="11" Opacity="0.7" TextWrapping="Wrap"
-                   Visibility="Collapsed"/>
+                   Foreground="White" Visibility="Collapsed"/>
         
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="OK" Width="80" Margin="0,0,10,0" 
-                    Click="OkButton_Click" IsDefault="True"/>
+                    Click="OkButton_Click" IsDefault="True"
+                    Background="#FF007ACC" Foreground="White" 
+                    BorderBrush="#FF007ACC" Padding="5,3"/>
             <Button Content="Cancel" Width="80" 
-                    Click="CancelButton_Click" IsCancel="True"/>
+                    Click="CancelButton_Click" IsCancel="True"
+                    Background="#FF3F3F46" Foreground="White"
+                    BorderBrush="#FF3F3F46" Padding="5,3"/>
         </StackPanel>
     </Grid>
 </Window>
