@@ -731,7 +731,7 @@ namespace PerfectWorldManager.Gui
             AccountActionResponse response = await _daemonService.CreateAccountAsync(request);
 
             if (FindName("CreateUserStatusTextBlock") is TextBlock finalStatusTb) finalStatusTb.Text = response.Message;
-            if (response.Success) { (FindName("CreateUserUsernameTextBox") as TextBox)?.Clear(); (FindName("CreateUserPasswordBox") as PasswordBox)?.Clear(); (FindName("CreateUserEmailTextBox") as TextBox)?.Clear(); await LoadBrowseAccountsAsync(); }
+            if (response.Success) { (FindName("CreateUserUsernameTextBox") as TextBox)?.Clear(); (FindName("CreateUserPasswordBox") as PasswordBox)?.Clear(); (FindName("CreateUserEmailTextBox") as TextBox)?.Clear(); }
         }
 
         private async void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
@@ -798,7 +798,7 @@ namespace PerfectWorldManager.Gui
             AccountActionResponse response = await _daemonService.SetGmStatusAsync(request);
 
             if (FindName("SetGmStatusTextBlock") is TextBlock finalStatusTb) finalStatusTb.Text = response.Message;
-            if (response.Success) { await LoadBrowseAccountsAsync(); }
+            if (response.Success) { }
         }
 
         private async void DeleteUserButton_Click(object sender, RoutedEventArgs e)
@@ -821,53 +821,9 @@ namespace PerfectWorldManager.Gui
             AccountActionResponse response = await _daemonService.DeleteUserAsync(request);
 
             if (FindName("DeleteUserStatusTextBlock") is TextBlock finalStatusTb) finalStatusTb.Text = response.Message;
-            if (response.Success) { (FindName("DeleteUserIdentifierTextBox") as TextBox)?.Clear(); await LoadBrowseAccountsAsync(); }
+            if (response.Success) { (FindName("DeleteUserIdentifierTextBox") as TextBox)?.Clear(); }
         }
 
-        private async void BrowseAccountsRefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            await LoadBrowseAccountsAsync();
-        }
-
-        private async Task LoadBrowseAccountsAsync()
-        {
-            //InitializeDbService();
-            //if (_dbService == null) { StatusBarText.Text = "DB service not init for Browse."; return; } // Consider localizing
-            if (_daemonService == null || !_daemonService.IsConnected)
-            {
-                StatusBarText.Text = "Daemon service not connected. Cannot load accounts."; // Consider localizing
-                if (FindName("BrowseAccountsListView") is ListView lv) lv.ItemsSource = null;
-                return;
-            }
-            StatusBarText.Text = "Loading accounts via daemon..."; // Consider localizing
-            try
-            {
-                var request = new GetAllUsersRequest();
-                GetAllUsersResponse response = await _daemonService.GetAllUsersAsync(request);
-
-                if (response.Success)
-                {
-                    var accounts = response.Users.Select(u => new UserAccountInfo // Core.UserAccountInfo
-                    {
-                        Id = u.Id,
-                        Name = u.Name,
-                        Email = u.Email,
-                        CreateTime = DateTime.TryParse(u.CreateTime, out var dt) ? dt : DateTime.MinValue,
-                        IsGm = u.IsGm
-                    }).ToList();
-
-                    if (FindName("BrowseAccountsListView") is ListView lv) lv.ItemsSource = accounts;
-                    StatusBarText.Text = $"Loaded {accounts.Count} accounts via daemon. {response.Message}"; // Consider localizing
-                }
-                else
-                {
-                    StatusBarText.Text = $"Error loading accounts via daemon: {response.Message}"; // Consider localizing
-                    if (FindName("BrowseAccountsListView") is ListView lv) lv.ItemsSource = null;
-                    MessageBox.Show($"Failed to load accounts via daemon: {response.Message}", "Error"); // Consider localizing
-                }
-            }
-            catch (Exception ex) { StatusBarText.Text = $"Client error loading accounts: {ex.Message.Split('\n')[0]}"; MessageBox.Show($"Failed to load accounts: {ex.Message}", "Error"); } // Consider localizing
-        }
 
         private async void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -893,7 +849,7 @@ namespace PerfectWorldManager.Gui
                     }
                     else if (selectedTab == AccountsTabItem && (_dbService != null))
                     {
-                        await LoadBrowseAccountsAsync();
+                        // Browse accounts section removed - no longer needed
                     }
                     else if (selectedTab == MapManagementTabItem && (_mapManagerService != null))
                     {

@@ -527,63 +527,6 @@
                                 </StackPanel>
                             </Border>
                         </Grid>
-
-                        <!-- Browse Accounts Section -->
-                        <Border Style="{StaticResource ModernCard}" Margin="0,20,0,0" Padding="20">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                
-                                <!-- Header -->
-                                <Grid Grid.Row="0" Margin="0,0,0,15">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <TextBlock Grid.Column="0" Text="{DynamicResource Accounts_BrowseAccounts}" 
-                                               FontSize="18" FontWeight="Bold" 
-                                               Foreground="{StaticResource ModernAccentBrush}"/>
-                                    
-                                    <Button Grid.Column="1" Content="{DynamicResource Accounts_RefreshList}" 
-                                            Name="BrowseAccountsRefreshButton" Click="BrowseAccountsRefreshButton_Click" 
-                                            Padding="15,8" Style="{StaticResource AccentButtonStyle}"/>
-                                </Grid>
-                                
-                                <!-- Accounts List -->
-                                <Border Grid.Row="1" BorderBrush="{StaticResource ModernBorderBrush}" 
-                                        BorderThickness="1" CornerRadius="4">
-                                    <ListView Name="BrowseAccountsListView" 
-                                              MaxHeight="400" 
-                                              Background="Transparent" 
-                                              BorderThickness="0">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridViewColumn Header="{DynamicResource Accounts_Col_ID}" 
-                                                                DisplayMemberBinding="{Binding Id}" Width="80"/>
-                                                <GridViewColumn Header="{DynamicResource Accounts_Col_Name}" 
-                                                                DisplayMemberBinding="{Binding Name}" Width="200"/>
-                                                <GridViewColumn Header="{DynamicResource Accounts_Col_Email}" 
-                                                                DisplayMemberBinding="{Binding Email}" Width="250"/>
-                                                <GridViewColumn Header="{DynamicResource Accounts_Col_Created}" 
-                                                                DisplayMemberBinding="{Binding CreateTime, StringFormat='yyyy-MM-dd HH:mm'}" 
-                                                                Width="180"/>
-                                                <GridViewColumn Header="{DynamicResource Accounts_Col_GM}" Width="80">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <CheckBox IsChecked="{Binding IsGm}" IsEnabled="False" 
-                                                                      HorizontalAlignment="Center"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </Border>
-                            </Grid>
-                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
