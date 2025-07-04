@@ -24,6 +24,7 @@ using PerfectWorldManager.Gui.ViewModels; // For CharacterEditorViewModel
 using PerfectWorldManager.Core.Services; // For IItemLookupService and ItemLookupService
 // using PerfectWorldManager.Gui.Utils; // For CharacterXmlParser (if it's there) - Ensure this is correct if ItemLookupService depends on it internally
 using PerfectWorldManager.Gui.Services;
+using PerfectWorldManager.Gui.Dialogs;
 
 // ADDED for Localization
 using System.Globalization;
@@ -60,8 +61,31 @@ namespace PerfectWorldManager.Gui
             // MODIFIED for Localization: AppSettings now loaded by App.xaml.cs
             AppSettings = App.AppSettings;
 
-            if (AppSettings.ProcessConfigurations == null || !AppSettings.ProcessConfigurations.Any())
+            // Initialize presets if empty
+            if (AppSettings.ProcessConfigPresets == null || !AppSettings.ProcessConfigPresets.Any())
             {
+                // Create the default 15x preset
+                var defaultPreset = new ProcessConfigurationPreset
+                {
+                    Name = "15x",
+                    Description = "Default 15x server configuration",
+                    IsReadOnly = true,
+                    Configurations = GetDefaultProcessConfigurations()
+                };
+                
+                AppSettings.ProcessConfigPresets = new List<ProcessConfigurationPreset> { defaultPreset };
+                AppSettings.ActivePresetName = "15x";
+            }
+
+            // Load the active preset configurations
+            var activePreset = AppSettings.ProcessConfigPresets.FirstOrDefault(p => p.Name == AppSettings.ActivePresetName);
+            if (activePreset != null)
+            {
+                AppSettings.ProcessConfigurations = activePreset.Configurations.ToList();
+            }
+            else if (AppSettings.ProcessConfigurations == null || !AppSettings.ProcessConfigurations.Any())
+            {
+                // Fallback to default if no active preset found
                 AppSettings.ProcessConfigurations = GetDefaultProcessConfigurations();
             }
 
@@ -199,6 +223,206 @@ namespace PerfectWorldManager.Gui
                 StatusBarText.Text = "New API Key generated. Save settings to persist."; // Consider localizing
             }
         }
+
+        #region Preset Management Methods
+        
+        private void PresetComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (PresetComboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            {
+                AppSettings.ActivePresetName = selectedPreset.Name;
+            }
+        }
+
+        private void LoadPresetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (PresetComboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            {
+                var result = MessageBox.Show(
+                    $"Load preset '{selectedPreset.Name}'? This will replace your current process configurations.",
+                    "Load Preset",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Load the preset configurations
+                    AppSettings.ProcessConfigurations = selectedPreset.Configurations.Select(c => new ProcessConfiguration
+                    {
+                        Type = c.Type,
+                        DisplayName = c.DisplayName,
+                        IsEnabled = c.IsEnabled,
+                        ExecutableDir = c.ExecutableDir,
+                        ExecutableName = c.ExecutableName,
+                        StartArguments = c.StartArguments,
+                        StatusCheckPattern = c.StatusCheckPattern,
+                        MapId = c.MapId
+                    }).ToList();
+
+                    AppSettings.ActivePresetName = selectedPreset.Name;
+                    
+                    // Refresh the DataGrid
+                    ProcessConfigDataGrid.ItemsSource = null;
+                    ProcessConfigDataGrid.ItemsSource = AppSettings.ProcessConfigurations;
+                    
+                    StatusBarText.Text = $"Loaded preset '{selectedPreset.Name}'. Remember to save settings.";
+                    NotificationManager.ShowSuccess("Preset Loaded", $"Configuration preset '{selectedPreset.Name}' has been loaded");
+                }
+            }
+        }
+
+        private void SavePresetAsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var nameDialog = new InputDialog(
+                "Enter a name for this preset:",
+                "Save Preset As",
+                "My Custom Preset")
+            {
+                Owner = this
+            };
+
+            if (nameDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(nameDialog.ResponseText))
+            {
+                var nameInput = nameDialog.ResponseText;
+                
+                // Check if preset name already exists
+                if (AppSettings.ProcessConfigPresets.Any(p => p.Name.Equals(nameInput, StringComparison.OrdinalIgnoreCase)))
+                {
+                    MessageBox.Show($"A preset with the name '{nameInput}' already exists. Please choose a different name.",
+                        "Preset Name Exists",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return;
+                }
+
+                var descriptionDialog = new InputDialog(
+                    "Enter a description for this preset (optional):",
+                    "Preset Description",
+                    "")
+                {
+                    Owner = this
+                };
+                
+                string descriptionInput = "";
+                if (descriptionDialog.ShowDialog() == true)
+                {
+                    descriptionInput = descriptionDialog.ResponseText;
+                }
+
+                var newPreset = new ProcessConfigurationPreset
+                {
+                    Name = nameInput,
+                    Description = descriptionInput,
+                    IsReadOnly = false,
+                    CreatedDate = DateTime.Now,
+                    LastModifiedDate = DateTime.Now,
+                    Configurations = AppSettings.ProcessConfigurations.Select(c => new ProcessConfiguration
+                    {
+                        Type = c.Type,
+                        DisplayName = c.DisplayName,
+                        IsEnabled = c.IsEnabled,
+                        ExecutableDir = c.ExecutableDir,
+                        ExecutableName = c.ExecutableName,
+                        StartArguments = c.StartArguments,
+                        StatusCheckPattern = c.StatusCheckPattern,
+                        MapId = c.MapId
+                    }).ToList()
+                };
+
+                AppSettings.ProcessConfigPresets.Add(newPreset);
+                AppSettings.ActivePresetName = newPreset.Name;
+                
+                // Refresh ComboBox
+                PresetComboBox.ItemsSource = null;
+                PresetComboBox.ItemsSource = AppSettings.ProcessConfigPresets;
+                PresetComboBox.SelectedValue = newPreset.Name;
+                
+                StatusBarText.Text = $"Created new preset '{nameInput}'. Remember to save settings.";
+                NotificationManager.ShowSuccess("Preset Created", $"Configuration preset '{nameInput}' has been created");
+            }
+        }
+
+        private void UpdatePresetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (PresetComboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            {
+                if (selectedPreset.IsReadOnly)
+                {
+                    MessageBox.Show("Cannot update read-only presets.", "Read-Only Preset", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var result = MessageBox.Show(
+                    $"Update preset '{selectedPreset.Name}' with current configurations?",
+                    "Update Preset",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    selectedPreset.Configurations = AppSettings.ProcessConfigurations.Select(c => new ProcessConfiguration
+                    {
+                        Type = c.Type,
+                        DisplayName = c.DisplayName,
+                        IsEnabled = c.IsEnabled,
+                        ExecutableDir = c.ExecutableDir,
+                        ExecutableName = c.ExecutableName,
+                        StartArguments = c.StartArguments,
+                        StatusCheckPattern = c.StatusCheckPattern,
+                        MapId = c.MapId
+                    }).ToList();
+                    
+                    selectedPreset.LastModifiedDate = DateTime.Now;
+                    
+                    StatusBarText.Text = $"Updated preset '{selectedPreset.Name}'. Remember to save settings.";
+                    NotificationManager.ShowSuccess("Preset Updated", $"Configuration preset '{selectedPreset.Name}' has been updated");
+                }
+            }
+        }
+
+        private void DeletePresetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (PresetComboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            {
+                if (selectedPreset.IsReadOnly)
+                {
+                    MessageBox.Show("Cannot delete read-only presets.", "Read-Only Preset", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete preset '{selectedPreset.Name}'?",
+                    "Delete Preset",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    AppSettings.ProcessConfigPresets.Remove(selectedPreset);
+                    
+                    // Switch to default preset if deleted was active
+                    if (AppSettings.ActivePresetName == selectedPreset.Name)
+                    {
+                        AppSettings.ActivePresetName = "15x";
+                        var defaultPreset = AppSettings.ProcessConfigPresets.FirstOrDefault(p => p.Name == "15x");
+                        if (defaultPreset != null)
+                        {
+                            LoadPresetButton_Click(sender, e);
+                        }
+                    }
+                    
+                    // Refresh ComboBox
+                    PresetComboBox.ItemsSource = null;
+                    PresetComboBox.ItemsSource = AppSettings.ProcessConfigPresets;
+                    PresetComboBox.SelectedValue = AppSettings.ActivePresetName;
+                    
+                    StatusBarText.Text = $"Deleted preset '{selectedPreset.Name}'. Remember to save settings.";
+                    NotificationManager.ShowWarning("Preset Deleted", $"Configuration preset '{selectedPreset.Name}' has been deleted");
+                }
+            }
+        }
+        
+        #endregion
 
 
         private void InitializeServices(bool forceReinitialize = false)

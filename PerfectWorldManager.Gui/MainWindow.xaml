@@ -278,6 +278,46 @@
                         <Separator Margin="0,15,0,10"/>
                         <TextBlock Text="{DynamicResource Settings_ProcessConfigs}" FontWeight="Bold" Margin="0,0,0,5"/>
                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" FontStyle="Italic" FontSize="11" Text="{DynamicResource Settings_ProcessConfigs_Desc}"/>
+                        
+                        <!-- Preset Management Controls -->
+                        <Border Style="{StaticResource ModernCard}" Margin="0,0,0,10" Padding="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Text="Configuration Preset:" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                                <ComboBox Name="PresetComboBox" Grid.Column="1" 
+                                          ItemsSource="{Binding AppSettings.ProcessConfigPresets}"
+                                          DisplayMemberPath="Name"
+                                          SelectedValuePath="Name"
+                                          SelectedValue="{Binding AppSettings.ActivePresetName}"
+                                          SelectionChanged="PresetComboBox_SelectionChanged"
+                                          VerticalAlignment="Center"/>
+                                
+                                <Button Content="Load" Grid.Column="2" Margin="10,0,5,0" Padding="10,5" 
+                                        Click="LoadPresetButton_Click" ToolTip="Load the selected preset configuration"/>
+                                <Button Content="Save As..." Grid.Column="3" Margin="5,0" Padding="10,5" 
+                                        Click="SavePresetAsButton_Click" ToolTip="Save current configuration as a new preset"/>
+                                <Button Content="Update" Grid.Column="4" Margin="5,0" Padding="10,5" 
+                                        Click="UpdatePresetButton_Click" ToolTip="Update the current preset with current configuration"
+                                        IsEnabled="{Binding ElementName=PresetComboBox, Path=SelectedItem.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"/>
+                                <Button Content="Delete" Grid.Column="5" Margin="5,0" Padding="10,5" 
+                                        Click="DeletePresetButton_Click" ToolTip="Delete the selected preset"
+                                        Background="{DynamicResource ModernErrorBrush}"
+                                        IsEnabled="{Binding ElementName=PresetComboBox, Path=SelectedItem.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"/>
+                                
+                                <TextBlock Grid.Column="6" Text="{Binding ElementName=PresetComboBox, Path=SelectedItem.Description}" 
+                                           VerticalAlignment="Center" Margin="10,0,0,0" FontStyle="Italic" Opacity="0.7"/>
+                            </Grid>
+                        </Border>
+                        
                         <DataGrid Name="ProcessConfigDataGrid" ItemsSource="{Binding AppSettings.ProcessConfigurations}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="400" Margin="0,0,0,10" HeadersVisibility="Column" GridLinesVisibility="Horizontal" BorderBrush="LightGray" BorderThickness="1">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="{DynamicResource Settings_Col_Type}" Binding="{Binding Type}" IsReadOnly="True" Width="100" MinWidth="100"/>
