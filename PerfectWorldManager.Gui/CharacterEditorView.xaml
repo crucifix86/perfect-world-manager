@@ -21,27 +21,28 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{DynamicResource CharacterEditor_CharacterIDLabel}" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding CharacterId, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="5,0" VerticalAlignment="Center"/>
-                <Button Content="{DynamicResource CharacterEditor_LoadCharacterButton}" Command="{Binding LoadCharacterCommand}" Margin="5,0" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
-                <Button Content="{DynamicResource CharacterEditor_RefreshCharacterButton}" Command="{Binding RefreshCharacterCommand}" Margin="5,0" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
-                <Button Content="{DynamicResource CharacterEditor_SaveCharacterButton}" Command="{Binding SaveCharacterCommand}" Margin="5,0" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
-                <TextBlock Text="{Binding StatusMessage}" Margin="10,0" VerticalAlignment="Center" Foreground="OrangeRed" TextWrapping="Wrap"/>
+            <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="{DynamicResource CharacterEditor_CharacterIDLabel}" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding CharacterId, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="5,0" VerticalAlignment="Center"/>
+                    <Button Content="{DynamicResource CharacterEditor_LoadCharacterButton}" Command="{Binding LoadCharacterCommand}" Margin="5,0" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Button Content="{DynamicResource CharacterEditor_RefreshCharacterButton}" Command="{Binding RefreshCharacterCommand}" Margin="5,0" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Button Content="{DynamicResource CharacterEditor_SaveCharacterButton}" Command="{Binding SaveCharacterCommand}" Margin="5,0" IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <TextBlock Text="{Binding StatusMessage}" Margin="10,0" VerticalAlignment="Center" Foreground="OrangeRed" TextWrapping="Wrap"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <Button Content="{DynamicResource CharacterEditor_SyncGuiToXmlButton}" Command="{Binding SyncGuiToXmlCommand}" Margin="5,0" ToolTip="Updates the Raw XML view from any changes made in the GUI Editor." IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Button Content="{DynamicResource CharacterEditor_SyncXmlToGuiButton}" Command="{Binding SyncXmlToGuiCommand}" Margin="5,0" ToolTip="Reloads the GUI Editor from the content of the Raw XML view." IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                <Button Content="{DynamicResource CharacterEditor_SyncGuiToXmlButton}" Command="{Binding SyncGuiToXmlCommand}" Margin="5,0" ToolTip="Updates the Raw XML view from any changes made in the GUI Editor." IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
-                <Button Content="{DynamicResource CharacterEditor_SyncXmlToGuiButton}" Command="{Binding SyncXmlToGuiCommand}" Margin="5,0" ToolTip="Reloads the GUI Editor from the content of the Raw XML view." IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
-            </StackPanel>
-        </StackPanel>
 
-        <TabControl Grid.Row="1" Margin="5" Name="EditorModeTabControl" SelectionChanged="EditorModeTabControl_SelectionChanged">
+            <TabControl Grid.Row="1" Margin="5" Name="EditorModeTabControl" SelectionChanged="EditorModeTabControl_SelectionChanged">
                 <TabItem Header="{DynamicResource CharacterEditor_TabGuiEditor}" x:Name="GuiEditorTab">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                         <Grid DataContext="{Binding CurrentCharacterVm}">
@@ -80,12 +81,12 @@
                                 </TabItem>
                                 <TabItem Header="{DynamicResource CharacterEditor_TabInventoryAndSafe}">
                                     <Grid>
-                                        <!--<Grid.Background>
+                                        <Grid.Background>
                                             <ImageBrush ImageSource="pack://application:,,,/PerfectWorldManager.Gui;component/Assets/inv.png"
                                                         Stretch="None"
                                                         AlignmentX="Left"
                                                         AlignmentY="Top"/>
-                                        </Grid.Background>-->
+                                        </Grid.Background>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="300"/>
@@ -271,12 +272,9 @@
                 </TabItem>
 
             </TabControl>
-        
-        <Border Background="#7F000000" 
-                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Panel.ZIndex="1000">
+        </Grid>
+
+        <Border Background="#7F000000" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.RowSpan="2">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="{DynamicResource CharacterEditor_LoadingText}" Foreground="White" FontSize="18" Margin="0,0,0,10"/>
                 <ProgressBar IsIndeterminate="True" Width="200" Height="20"/>
