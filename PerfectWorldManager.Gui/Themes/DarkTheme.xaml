@@ -569,18 +569,15 @@
     <!-- Simple TabItem styling without custom template -->
     <Style TargetType="TabItem">
         <Setter Property="Background" Value="{StaticResource ModernLighterBackgroundBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource ModernForegroundBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderBrush" Value="{StaticResource ModernBorderBrush}"/>
         <Setter Property="Padding" Value="10,6"/>
         <Setter Property="FontSize" Value="{StaticResource ModernBaseFontSize}"/>
         <Setter Property="FontFamily" Value="{StaticResource ModernFontFamily}"/>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#FF2D2D30"/>
-                <Setter Property="Foreground" Value="#FFFFFF"/>
+                <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="BorderBrush" Value="#FF007ACC"/>
-                <Setter Property="BorderThickness" Value="0,0,0,2"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource ModernControlMouseOverBrush}"/>
