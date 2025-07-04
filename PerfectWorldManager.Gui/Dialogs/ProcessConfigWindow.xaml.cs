@@ -97,7 +97,8 @@ namespace PerfectWorldManager.Gui.Dialogs
         private void PresetComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             // Update the active preset name when selection changes
-            if (PresetComboBox.SelectedValue is string presetName)
+            var comboBox = sender as System.Windows.Controls.ComboBox;
+            if (comboBox?.SelectedValue is string presetName)
             {
                 ActivePresetName = presetName;
             }
@@ -105,7 +106,8 @@ namespace PerfectWorldManager.Gui.Dialogs
         
         private void LoadPresetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PresetComboBox.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            var presetComboBox = this.FindName("PresetComboBox") as System.Windows.Controls.ComboBox;
+            if (presetComboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
             {
                 var preset = PresetManager.LoadPreset(selectedPreset.Name);
                 if (preset != null)
@@ -164,7 +166,8 @@ namespace PerfectWorldManager.Gui.Dialogs
                 PresetManager.SavePreset(newPreset);
                 _mainWindow.LoadPresetsFromFiles();
                 ProcessConfigPresets = _mainWindow.ProcessConfigPresets;
-                PresetComboBox.SelectedValue = newPreset.Name;
+                var presetComboBox = this.FindName("PresetComboBox") as System.Windows.Controls.ComboBox;
+                if (presetComboBox != null) presetComboBox.SelectedValue = newPreset.Name;
                 _settings.ActivePresetName = newPreset.Name;
                 ActivePresetName = newPreset.Name;
                 
@@ -175,7 +178,8 @@ namespace PerfectWorldManager.Gui.Dialogs
         
         private void UpdatePresetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PresetComboBox.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            var presetComboBox = this.FindName("PresetComboBox") as System.Windows.Controls.ComboBox;
+            if (presetComboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
             {
                 if (selectedPreset.IsReadOnly)
                 {
@@ -218,7 +222,8 @@ namespace PerfectWorldManager.Gui.Dialogs
         
         private void DeletePresetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (PresetComboBox.SelectedItem is ProcessConfigurationPreset selectedPreset)
+            var presetComboBox = this.FindName("PresetComboBox") as System.Windows.Controls.ComboBox;
+            if (presetComboBox?.SelectedItem is ProcessConfigurationPreset selectedPreset)
             {
                 if (selectedPreset.IsReadOnly)
                 {
@@ -246,7 +251,8 @@ namespace PerfectWorldManager.Gui.Dialogs
                     
                     _mainWindow.LoadPresetsFromFiles();
                     ProcessConfigPresets = _mainWindow.ProcessConfigPresets;
-                    PresetComboBox.SelectedValue = ActivePresetName;
+                    var comboBox = this.FindName("PresetComboBox") as System.Windows.Controls.ComboBox;
+                    if (comboBox != null) comboBox.SelectedValue = ActivePresetName;
                     
                     MessageBox.Show($"Deleted preset '{selectedPreset.Name}'", "Preset Deleted", 
                         MessageBoxButton.OK, MessageBoxImage.Information);

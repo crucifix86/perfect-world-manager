@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:PerfectWorldManager.Gui.Converters"
         mc:Ignorable="d"
         Title="Process Configurations" 
         Height="600" 
@@ -12,6 +13,10 @@
         AllowsTransparency="True" 
         Background="Transparent"
         ResizeMode="CanResizeWithGrip">
+    
+    <Window.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
     
     <Border BorderBrush="{StaticResource ModernBorderBrush}" BorderThickness="1" Background="{StaticResource ModernBackgroundBrush}">
         <Grid>
