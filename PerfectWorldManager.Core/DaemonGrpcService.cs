@@ -76,7 +76,7 @@ namespace PerfectWorldManager.Core
             _client = null;
             IsConnected = false;
 
-            _currentDaemonUrl = _settings.DaemonServiceUrl;
+            _currentDaemonUrl = _settings.DaemonServiceUrl?.Trim();
             _currentApiKey = _settings.ApiKey; // Store current API Key for change detection
             ConnectionAttempting?.Invoke(this, EventArgs.Empty);
 
@@ -85,6 +85,12 @@ namespace PerfectWorldManager.Core
                 if (string.IsNullOrWhiteSpace(_currentDaemonUrl))
                 {
                     throw new InvalidOperationException("Daemon service URL is not configured.");
+                }
+                
+                // Validate URL format
+                if (!_currentDaemonUrl.StartsWith("http://") && !_currentDaemonUrl.StartsWith("https://"))
+                {
+                    throw new InvalidOperationException($"Invalid URL format: '{_currentDaemonUrl}'. URL must start with http:// or https://");
                 }
                 if (string.IsNullOrWhiteSpace(_apiKey))
                 {
@@ -105,12 +111,13 @@ namespace PerfectWorldManager.Core
                     MaxSendMessageSize = null,
                 };
 
+                Debug.WriteLine($"Creating gRPC channel for URL: '{_currentDaemonUrl}'");
                 _channel = GrpcChannel.ForAddress(_currentDaemonUrl, channelOptions);
                 _client = new Manager.ManagerClient(_channel);
 
                 IsConnected = true; // Assume connected, actual calls will verify with API key
                 ConnectionEstablished?.Invoke(this, EventArgs.Empty);
-                Debug.WriteLine($"gRPC Channel created for: {_currentDaemonUrl}");
+                Debug.WriteLine($"gRPC Channel successfully created for: {_currentDaemonUrl}");
             }
             catch (Exception ex)
             {
