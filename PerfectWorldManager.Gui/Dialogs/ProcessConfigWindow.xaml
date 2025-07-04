@@ -1,0 +1,193 @@
+﻿<Window x:Class="PerfectWorldManager.Gui.Dialogs.ProcessConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Process Configurations" 
+        Height="600" 
+        Width="1200"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None" 
+        AllowsTransparency="True" 
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip">
+    
+    <Border BorderBrush="{StaticResource ModernBorderBrush}" BorderThickness="1" Background="{StaticResource ModernBackgroundBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Custom Title Bar -->
+            <Grid Grid.Row="0" Background="{StaticResource ModernLighterBackgroundBrush}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Title -->
+                <TextBlock Grid.Column="0" Text="Process Configurations" 
+                           VerticalAlignment="Center" Margin="10,0" 
+                           FontSize="14" Foreground="{StaticResource ModernForegroundBrush}"/>
+                
+                <!-- Close Button -->
+                <Button Grid.Column="1" Content="✕" Width="46" Height="32" 
+                        Click="CloseButton_Click" 
+                        Style="{StaticResource WindowCloseButtonStyle}"/>
+            </Grid>
+            
+            <!-- Main Content -->
+            <Grid Grid.Row="1" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Description -->
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,0,0,10" 
+                           FontStyle="Italic" FontSize="12" 
+                           Text="{DynamicResource Settings_ProcessConfigs_Desc}"/>
+                
+                <!-- Preset Management Controls -->
+                <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,15" Padding="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Text="Configuration Preset:" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                        <ComboBox Name="PresetComboBox" Grid.Column="1" 
+                                  ItemsSource="{Binding ProcessConfigPresets}"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Name"
+                                  SelectedValue="{Binding ActivePresetName}"
+                                  SelectionChanged="PresetComboBox_SelectionChanged"
+                                  VerticalAlignment="Center"/>
+                        
+                        <Button Content="Load" Grid.Column="2" Margin="10,0,5,0" Padding="10,5" 
+                                Click="LoadPresetButton_Click" ToolTip="Load the selected preset configuration"/>
+                        <Button Content="Save As..." Grid.Column="3" Margin="5,0" Padding="10,5" 
+                                Click="SavePresetAsButton_Click" ToolTip="Save current configuration as a new preset"/>
+                        <Button Content="Update" Grid.Column="4" Margin="5,0" Padding="10,5" 
+                                Click="UpdatePresetButton_Click" ToolTip="Update the current preset with current configuration"
+                                IsEnabled="{Binding ElementName=PresetComboBox, Path=SelectedItem.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="Delete" Grid.Column="5" Margin="5,0" Padding="10,5" 
+                                Click="DeletePresetButton_Click" ToolTip="Delete the selected preset"
+                                Background="{DynamicResource ModernErrorBrush}"
+                                IsEnabled="{Binding ElementName=PresetComboBox, Path=SelectedItem.IsReadOnly, Converter={StaticResource InverseBooleanConverter}}"/>
+                        
+                        <TextBlock Grid.Column="6" Text="{Binding ElementName=PresetComboBox, Path=SelectedItem.Description}" 
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontStyle="Italic" Opacity="0.7"/>
+                    </Grid>
+                </Border>
+                
+                <!-- Process Configurations DataGrid -->
+                <DataGrid Grid.Row="2" Name="ProcessConfigDataGrid"
+                          ItemsSource="{Binding ProcessConfigurations}" 
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="False" 
+                          CanUserDeleteRows="False" 
+                          HeadersVisibility="Column" 
+                          GridLinesVisibility="Horizontal" 
+                          RowHeight="35"
+                          ColumnHeaderHeight="40"
+                          FontSize="13"
+                          BorderThickness="0"
+                          Background="Transparent">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="8,4"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        </Style>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Padding" Value="8,8"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="13"/>
+                        </Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Padding" Value="4,2"/>
+                            <Setter Property="MinHeight" Value="26"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Enabled" Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTextColumn Header="Type" 
+                                            Binding="{Binding Type}" 
+                                            IsReadOnly="True" 
+                                            Width="120">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Foreground" Value="{StaticResource ModernAccentBrush}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        
+                        <DataGridTextColumn Header="Display Name" 
+                                            Binding="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Width="200"/>
+                        
+                        <DataGridTextColumn Header="Executable Directory" 
+                                            Binding="{Binding ExecutableDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Width="150"/>
+                        
+                        <DataGridTextColumn Header="Executable" 
+                                            Binding="{Binding ExecutableName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Width="150"/>
+                        
+                        <DataGridTextColumn Header="Start Arguments" 
+                                            Binding="{Binding StartArguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Width="250"/>
+                        
+                        <DataGridTextColumn Header="Status Pattern" 
+                                            Binding="{Binding StatusCheckPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Width="200"/>
+                        
+                        <DataGridTextColumn Header="Map ID" 
+                                            Binding="{Binding MapId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Width="80">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+            
+            <!-- Action Buttons -->
+            <Border Grid.Row="2" Background="{StaticResource ModernLighterBackgroundBrush}" Padding="20,15">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Save Settings" 
+                            Click="SaveSettings_Click" 
+                            Padding="15,8" 
+                            Margin="0,0,10,0"
+                            Style="{StaticResource AccentButtonStyle}"/>
+                    <Button Content="Cancel" 
+                            Click="CancelButton_Click" 
+                            Padding="15,8"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

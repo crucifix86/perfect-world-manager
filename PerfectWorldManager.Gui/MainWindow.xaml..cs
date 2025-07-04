@@ -151,7 +151,7 @@ namespace PerfectWorldManager.Gui
             }
         }
 
-        private void InitializeServerProcessList()
+        public void InitializeServerProcessList()
         {
             ServerProcesses.Clear();
             if (AppSettings.ProcessConfigurations == null) return;
@@ -1272,7 +1272,7 @@ namespace PerfectWorldManager.Gui
             else { MessageBox.Show("Please select a map to delete from the list.", "No Map Selected", MessageBoxButton.OK, MessageBoxImage.Information); } // Consider localizing
         }
 
-        private void LoadPresetsFromFiles()
+        public void LoadPresetsFromFiles()
         {
             ProcessConfigPresets.Clear();
             var presets = PresetManager.LoadAllPresets();
@@ -1381,6 +1381,19 @@ namespace PerfectWorldManager.Gui
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void OpenProcessConfigWindow_Click(object sender, RoutedEventArgs e)
+        {
+            var configWindow = new ProcessConfigWindow(AppSettings, this);
+            configWindow.Owner = this;
+            
+            if (configWindow.ShowDialog() == true)
+            {
+                // Settings were saved in the dialog
+                // Refresh the UI to show the updated active preset name
+                OnPropertyChanged(nameof(AppSettings));
+            }
         }
     }
 }
