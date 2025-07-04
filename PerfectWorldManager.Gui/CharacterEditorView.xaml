@@ -44,8 +44,8 @@
         <TabControl Grid.Row="1" Margin="5" Name="EditorModeTabControl" SelectionChanged="EditorModeTabControl_SelectionChanged">
                 <TabItem Header="{DynamicResource CharacterEditor_TabGuiEditor}" x:Name="GuiEditorTab">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <Grid>
-                            <TabControl DataContext="{Binding CurrentCharacterVm}" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
+                        <Grid DataContext="{Binding CurrentCharacterVm}">
+                            <TabControl Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
                                 <TabItem Header="{DynamicResource CharacterEditor_TabBaseInfo}">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <ItemsControl ItemsSource="{Binding BaseInfo.Variables}">
@@ -80,12 +80,12 @@
                                 </TabItem>
                                 <TabItem Header="{DynamicResource CharacterEditor_TabInventoryAndSafe}">
                                     <Grid>
-                                        <Grid.Background>
+                                        <!--<Grid.Background>
                                             <ImageBrush ImageSource="pack://application:,,,/PerfectWorldManager.Gui;component/Assets/inv.png"
                                                         Stretch="None"
                                                         AlignmentX="Left"
                                                         AlignmentY="Top"/>
-                                        </Grid.Background>
+                                        </Grid.Background>-->
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="300"/>
