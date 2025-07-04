@@ -254,14 +254,72 @@ namespace PerfectWorldManager.Core
             ExecuteGrpcCallAsync(async (client, options) => await client.ImportCharacterDataAsync(request, options),
                                  () => new ImportCharacterResponse { Success = false, Message = "Daemon Error: Failed to connect or client error during ImportCharacterData." });
 
-        // For now, we'll implement this using direct database query through the daemon
-        // This is a temporary implementation until the gRPC endpoint is added
         public async Task<(List<GuiPlayerCharacterInfo> Characters, bool Success, string Message)> GetCharacterRangeAsync(int startId, int endId)
         {
-            // Since we don't have a dedicated gRPC method yet, we'll return an empty list
-            // with a message indicating this feature needs daemon support
-            return (new List<GuiPlayerCharacterInfo>(), false, 
-                "Character range query not yet implemented in daemon. Please use search by User ID for now.");
+            var client = GetClient();
+            if (client == null)
+            {
+                client = GetClient(true); // Force re-check
+                if (client == null)
+                {
+                    return (new List<GuiPlayerCharacterInfo>(), false, "Daemon Error: Not connected or client unavailable.");
+                }
+            }
+            if (string.IsNullOrWhiteSpace(_apiKey))
+            {
+                string errorMsg = "API Key is missing. Please configure it in settings.";
+                ConnectionFailed?.Invoke(this, errorMsg);
+                return (new List<GuiPlayerCharacterInfo>(), false, errorMsg);
+            }
+
+            try
+            {
+                var request = new GetCharacterRangeRequest { StartId = startId, EndId = endId };
+                var headers = GetApiKeyHeaders();
+                var callOptions = new CallOptions(headers, deadline: Deadline);
+
+                var response = await client.GetCharacterRangeAsync(request, callOptions);
+
+                var guiCharacters = new List<GuiPlayerCharacterInfo>();
+                if (response.Success)
+                {
+                    foreach (var charItem in response.Characters)
+                    {
+                        guiCharacters.Add(new GuiPlayerCharacterInfo 
+                        { 
+                            RoleId = charItem.RoleId, 
+                            RoleName = charItem.RoleName,
+                            Level = charItem.Level,
+                            UserId = charItem.UserId
+                        });
+                    }
+                }
+                return (guiCharacters, response.Success, response.Message);
+            }
+            catch (RpcException ex)
+            {
+                IsConnected = false;
+                string errorMessage = $"gRPC Error: {ex.StatusCode}";
+                if (ex.StatusCode == StatusCode.Unauthenticated)
+                {
+                    errorMessage = "Daemon authentication failed: Invalid or missing API Key.";
+                }
+                else if (!string.IsNullOrWhiteSpace(ex.Status.Detail)) errorMessage += $" - {ex.Status.Detail}";
+                else if (!string.IsNullOrWhiteSpace(ex.Message)) errorMessage += $" - {ex.Message.Split(Environment.NewLine)[0]}";
+                Debug.WriteLine($"ERROR: RpcException in GetCharacterRangeAsync: {errorMessage}\nFull Exception: {ex}");
+                ConnectionFailed?.Invoke(this, errorMessage);
+                if (ex.StatusCode == StatusCode.Unavailable || ex.StatusCode == StatusCode.Internal || ex.StatusCode == StatusCode.Unauthenticated) Disconnected?.Invoke(this, EventArgs.Empty);
+                return (new List<GuiPlayerCharacterInfo>(), false, errorMessage);
+            }
+            catch (Exception ex)
+            {
+                IsConnected = false;
+                string errorMessage = $"Client error in GetCharacterRangeAsync: {ex.Message.Split(Environment.NewLine)[0]}";
+                Debug.WriteLine($"ERROR: Unexpected exception in GetCharacterRangeAsync: {errorMessage}\nFull Exception: {ex}");
+                ConnectionFailed?.Invoke(this, errorMessage);
+                Disconnected?.Invoke(this, EventArgs.Empty);
+                return (new List<GuiPlayerCharacterInfo>(), false, errorMessage);
+            }
         }
 
         public async Task<(List<GuiPlayerCharacterInfo> Characters, bool Success, string Message)> GetPlayerCharactersAsync(int userId)

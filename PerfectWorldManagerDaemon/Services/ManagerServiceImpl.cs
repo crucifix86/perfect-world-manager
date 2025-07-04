@@ -933,6 +933,133 @@ namespace PerfectWorldManagerDaemon.Services
             return response;
         }
 
+        public override async Task<GetCharacterRangeResponse> GetCharacterRange(GetCharacterRangeRequest request, ServerCallContext context)
+        {
+            if (!IsApiKeyValid(context)) return new GetCharacterRangeResponse { Success = false, Message = context.Status.Detail };
+            _logger.LogInformation($"[ManagerService] GetCharacterRange RPC called for range: {request.StartId} to {request.EndId}");
+            var response = new GetCharacterRangeResponse { Success = false };
+
+            var foundCharacters = new List<CharacterRangeItem>();
+
+            string gamedbdBasePath = _characterEditorGameDbDir;
+            string gamedbdExecutable = Path.Combine(gamedbdBasePath, "gamedbd");
+            string arguments = $"./gamesys.conf listrolebrief";
+            string commandForBash = $"cd '{gamedbdBasePath.Replace("'", "'\\''")}' && \"{gamedbdExecutable.Replace("\"", "\\\"")}\" {arguments}";
+
+            _logger.LogInformation($"[ManagerService] Preparing to execute gamedbd command via bash: {commandForBash}");
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "/bin/bash",
+                Arguments = $"-c \"{commandForBash.Replace("\"", "\\\"")}\"",
+                WorkingDirectory = gamedbdBasePath,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+                StandardOutputEncoding = Encoding.UTF8,
+            };
+
+            try
+            {
+                var outputBuilder = new StringBuilder();
+                var errorBuilder = new StringBuilder();
+                int exitCode = -1;
+
+                using (var process = new Process { StartInfo = psi })
+                {
+                    process.OutputDataReceived += (sender, e) => { if (e.Data != null) outputBuilder.AppendLine(e.Data); };
+                    process.ErrorDataReceived += (sender, e) => { if (e.Data != null) errorBuilder.AppendLine(e.Data); };
+
+                    process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    if (process.WaitForExit(20000))
+                    {
+                        exitCode = process.ExitCode;
+                    }
+                    else
+                    {
+                        try { process.Kill(true); } catch (Exception killEx) { _logger.LogWarning(killEx, "Failed to kill gamedbd process on timeout for listrolebrief."); }
+                        _logger.LogWarning($"[ManagerService] gamedbd 'listrolebrief' command timed out for range query.");
+                        response.Message = "Command to retrieve character list timed out.";
+                        response.Success = false;
+                        return response;
+                    }
+                }
+
+                string stdOutput = outputBuilder.ToString();
+                string stdError = errorBuilder.ToString();
+
+                if (exitCode == 0)
+                {
+                    _logger.LogInformation($"[ManagerService] gamedbd 'listrolebrief' successful. Parsing for ID range: {request.StartId}-{request.EndId}");
+                    var lines = stdOutput.Split(new[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (lines.Length > 1)
+                    {
+                        for (int i = 1; i < lines.Length; i++)
+                        {
+                            string line = lines[i];
+                            var parts = line.Split(',');
+                            if (parts.Length >= 3)
+                            {
+                                string roleIdStr = parts[0].Trim();
+                                string userIdStr = parts[1].Trim();
+                                string nameStr = parts[2].Trim().Trim('"');
+                                
+                                if (int.TryParse(roleIdStr, out int roleId) && roleId >= request.StartId && roleId <= request.EndId)
+                                {
+                                    if (int.TryParse(userIdStr, out int userId))
+                                    {
+                                        // Note: Level information is not available from listrolebrief command
+                                        // Would need to export character data to get level
+                                        foundCharacters.Add(new CharacterRangeItem 
+                                        { 
+                                            RoleId = roleId, 
+                                            RoleName = nameStr,
+                                            Level = 0, // Default to 0 since we don't have this info
+                                            UserId = userId
+                                        });
+                                        _logger.LogDebug($"[ManagerService] Found character in range: RoleID={roleId}, UserID={userId}, Name='{nameStr}'");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (foundCharacters.Any())
+                    {
+                        response.Characters.AddRange(foundCharacters);
+                        response.Success = true;
+                        response.Message = $"Successfully retrieved {foundCharacters.Count} characters in range {request.StartId}-{request.EndId}.";
+                    }
+                    else
+                    {
+                        response.Success = true; // Still success, just no data found
+                        response.Message = $"No characters found in range {request.StartId}-{request.EndId}.";
+                    }
+                }
+                else
+                {
+                    response.Message = $"gamedbd 'listrolebrief' command failed. ExitCode: {exitCode}.";
+                    if (!string.IsNullOrWhiteSpace(stdError)) response.Message += $" Error: {stdError.Trim()}";
+                    _logger.LogError($"[ManagerService] gamedbd 'listrolebrief' command failed for range query. ExitCode: {exitCode}. Stderr: {stdError}");
+                    response.Success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"[ManagerService] Exception executing 'listrolebrief' for range {request.StartId}-{request.EndId}.");
+                response.Message = $"Server exception while executing command: {ex.Message}";
+                response.Success = false;
+            }
+
+            _logger.LogInformation($"[ManagerService] GetCharacterRange RPC completed. Success: {response.Success}, Characters found: {response.Characters.Count}");
+            return response;
+        }
+
         // ----- Account Management Implementations -----
 
         public override async Task<AccountActionResponse> CreateAccount(CreateAccountRequest request, ServerCallContext context)
