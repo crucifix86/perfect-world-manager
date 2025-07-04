@@ -631,24 +631,33 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource ModernFocusVisualStyle}"/>
-        <Style.Triggers>
-            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                <Setter Property="Background" Value="{StaticResource ModernEvenLighterBackgroundBrush}"/>
-            </Trigger>
-            <!-- Removed hover effect for ListViewItem
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource ModernControlMouseOverBrush}"/>
-            </Trigger>
-            -->
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource ModernAccentBrush}"/>
-                <Setter Property="Foreground" Value="{StaticResource ModernAccentContrastBrush}"/>
-            </Trigger>
-            <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{StaticResource ModernDisabledForegroundBrush}"/>
-                <Setter Property="Background" Value="Transparent"/>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border x:Name="Border" 
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="true">
+                        <GridViewRowPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ModernEvenLighterBackgroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ModernAccentBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource ModernAccentContrastBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource ModernDisabledForegroundBrush}"/>
+                            <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="GridViewColumnHeader">
