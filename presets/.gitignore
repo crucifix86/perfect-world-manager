@@ -1,0 +1,8 @@
+# Ignore all JSON files
+*.json
+
+# But track specific default presets
+!15x.json
+
+# Always track the README
+!README.md

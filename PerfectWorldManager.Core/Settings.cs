@@ -99,9 +99,6 @@ namespace PerfectWorldManager.Core
         private List<ProcessConfiguration> _processConfigurations = new List<ProcessConfiguration>();
         public List<ProcessConfiguration> ProcessConfigurations { get => _processConfigurations; set => SetProperty(ref _processConfigurations, value); }
         
-        private List<ProcessConfigurationPreset> _processConfigPresets = new List<ProcessConfigurationPreset>();
-        public List<ProcessConfigurationPreset> ProcessConfigPresets { get => _processConfigPresets; set => SetProperty(ref _processConfigPresets, value); }
-        
         private string _activePresetName = "15x";
         public string ActivePresetName { get => _activePresetName; set => SetProperty(ref _activePresetName, value); }
         #endregion

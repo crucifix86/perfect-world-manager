@@ -1,0 +1,119 @@
+{
+  "Name": "15x",
+  "Description": "Default 15x server configuration",
+  "CreatedDate": "2024-01-01T00:00:00",
+  "LastModifiedDate": "2024-01-01T00:00:00",
+  "IsReadOnly": true,
+  "Configurations": [
+    {
+      "Type": "LogService",
+      "DisplayName": "Log Service",
+      "IsEnabled": true,
+      "ExecutableDir": "logservice",
+      "ExecutableName": "./logservice",
+      "StartArguments": "logservice.conf",
+      "StatusCheckPattern": "./logservice logservice.conf",
+      "MapId": null
+    },
+    {
+      "Type": "UniqueNamed",
+      "DisplayName": "UniqueName Daemon",
+      "IsEnabled": true,
+      "ExecutableDir": "uniquenamed",
+      "ExecutableName": "./uniquenamed",
+      "StartArguments": "gamesys.conf",
+      "StatusCheckPattern": "./uniquenamed gamesys.conf",
+      "MapId": null
+    },
+    {
+      "Type": "AuthDaemon",
+      "DisplayName": "Auth Daemon",
+      "IsEnabled": true,
+      "ExecutableDir": "authd",
+      "ExecutableName": "./authd",
+      "StartArguments": "",
+      "StatusCheckPattern": "./authd",
+      "MapId": null
+    },
+    {
+      "Type": "GameDbd",
+      "DisplayName": "GameDB Daemon",
+      "IsEnabled": true,
+      "ExecutableDir": "gamedbd",
+      "ExecutableName": "./gamedbd",
+      "StartArguments": "gamesys.conf",
+      "StatusCheckPattern": "./gamedbd gamesys.conf",
+      "MapId": null
+    },
+    {
+      "Type": "GameAntiCheatDaemon",
+      "DisplayName": "Game AC Daemon",
+      "IsEnabled": true,
+      "ExecutableDir": "gacd",
+      "ExecutableName": "./gacd",
+      "StartArguments": "gamesys.conf",
+      "StatusCheckPattern": "./gacd gamesys.conf",
+      "MapId": null
+    },
+    {
+      "Type": "GameFactionDaemon",
+      "DisplayName": "Faction Daemon",
+      "IsEnabled": true,
+      "ExecutableDir": "gfactiond",
+      "ExecutableName": "./gfactiond",
+      "StartArguments": "gamesys.conf",
+      "StatusCheckPattern": "./gfactiond gamesys.conf",
+      "MapId": null
+    },
+    {
+      "Type": "GameDeliveryDaemon",
+      "DisplayName": "Delivery Daemon",
+      "IsEnabled": true,
+      "ExecutableDir": "gdeliveryd",
+      "ExecutableName": "./gdeliveryd",
+      "StartArguments": "gamesys.conf",
+      "StatusCheckPattern": "./gdeliveryd gamesys.conf",
+      "MapId": null
+    },
+    {
+      "Type": "GameLinkDaemon",
+      "DisplayName": "Gateway Link",
+      "IsEnabled": true,
+      "ExecutableDir": "glinkd",
+      "ExecutableName": "./glinkd",
+      "StartArguments": "gamesys.conf",
+      "StatusCheckPattern": "./glinkd gamesys.conf",
+      "MapId": "glinkd"
+    },
+    {
+      "Type": "GameServer",
+      "DisplayName": "Game Server (gs01)",
+      "IsEnabled": true,
+      "ExecutableDir": "gamed",
+      "ExecutableName": "./gs",
+      "StartArguments": "gs01 gs.conf gmserver.conf gsalias.conf",
+      "StatusCheckPattern": "./gs gs01 gs.conf",
+      "MapId": "gs01"
+    },
+    {
+      "Type": "PwAdmin",
+      "DisplayName": "PWAdmin Panel",
+      "IsEnabled": true,
+      "ExecutableDir": "",
+      "ExecutableName": "./startup.sh",
+      "StartArguments": "",
+      "StatusCheckPattern": "pwadmin",
+      "MapId": null
+    },
+    {
+      "Type": "AntiCrash",
+      "DisplayName": "Anti-Crash",
+      "IsEnabled": true,
+      "ExecutableDir": "",
+      "ExecutableName": "./anti_crash",
+      "StartArguments": "",
+      "StatusCheckPattern": "./anti_crash",
+      "MapId": null
+    }
+  ]
+}

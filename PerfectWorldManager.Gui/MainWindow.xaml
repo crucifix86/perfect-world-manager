@@ -294,7 +294,7 @@
                                 
                                 <TextBlock Text="Configuration Preset:" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
                                 <ComboBox Name="PresetComboBox" Grid.Column="1" 
-                                          ItemsSource="{Binding AppSettings.ProcessConfigPresets}"
+                                          ItemsSource="{Binding ProcessConfigPresets}"
                                           DisplayMemberPath="Name"
                                           SelectedValuePath="Name"
                                           SelectedValue="{Binding AppSettings.ActivePresetName}"

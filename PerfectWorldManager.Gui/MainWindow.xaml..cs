@@ -42,6 +42,7 @@ namespace PerfectWorldManager.Gui
 
         public ObservableCollection<ServerProcessInfo> ServerProcesses { get; set; } = new();
         public ObservableCollection<MapDisplayInfo> DisplayableMaps { get; set; } = new();
+        public ObservableCollection<ProcessConfigurationPreset> ProcessConfigPresets { get; set; } = new();
 
         private int _daemonService_SettingsHash;
         private int _mapManagerService_SettingsHash;
@@ -61,32 +62,29 @@ namespace PerfectWorldManager.Gui
             // MODIFIED for Localization: AppSettings now loaded by App.xaml.cs
             AppSettings = App.AppSettings;
 
-            // Initialize presets if empty
-            if (AppSettings.ProcessConfigPresets == null || !AppSettings.ProcessConfigPresets.Any())
-            {
-                // Create the default 15x preset
-                var defaultPreset = new ProcessConfigurationPreset
-                {
-                    Name = "15x",
-                    Description = "Default 15x server configuration",
-                    IsReadOnly = true,
-                    Configurations = GetDefaultProcessConfigurations()
-                };
-                
-                AppSettings.ProcessConfigPresets = new List<ProcessConfigurationPreset> { defaultPreset };
-                AppSettings.ActivePresetName = "15x";
-            }
+            // Load presets from file system
+            LoadPresetsFromFiles();
 
             // Load the active preset configurations
-            var activePreset = AppSettings.ProcessConfigPresets.FirstOrDefault(p => p.Name == AppSettings.ActivePresetName);
+            var activePreset = PresetManager.LoadPreset(AppSettings.ActivePresetName);
             if (activePreset != null)
             {
                 AppSettings.ProcessConfigurations = activePreset.Configurations.ToList();
             }
-            else if (AppSettings.ProcessConfigurations == null || !AppSettings.ProcessConfigurations.Any())
+            else
             {
-                // Fallback to default if no active preset found
-                AppSettings.ProcessConfigurations = GetDefaultProcessConfigurations();
+                // Fallback to 15x if active preset not found
+                AppSettings.ActivePresetName = "15x";
+                activePreset = PresetManager.LoadPreset("15x");
+                if (activePreset != null)
+                {
+                    AppSettings.ProcessConfigurations = activePreset.Configurations.ToList();
+                }
+                else
+                {
+                    // Ultimate fallback - use in-memory defaults
+                    AppSettings.ProcessConfigurations = GetDefaultProcessConfigurations();
+                }
             }
 
             this.DataContext = this; // Make sure DataContext is set for bindings in XAML
@@ -246,27 +244,36 @@ namespace PerfectWorldManager.Gui
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    // Load the preset configurations
-                    AppSettings.ProcessConfigurations = selectedPreset.Configurations.Select(c => new ProcessConfiguration
+                    // Load fresh from file to ensure we have latest version
+                    var presetFromFile = PresetManager.LoadPreset(selectedPreset.Name);
+                    if (presetFromFile != null)
                     {
-                        Type = c.Type,
-                        DisplayName = c.DisplayName,
-                        IsEnabled = c.IsEnabled,
-                        ExecutableDir = c.ExecutableDir,
-                        ExecutableName = c.ExecutableName,
-                        StartArguments = c.StartArguments,
-                        StatusCheckPattern = c.StatusCheckPattern,
-                        MapId = c.MapId
-                    }).ToList();
+                        // Load the preset configurations
+                        AppSettings.ProcessConfigurations = presetFromFile.Configurations.Select(c => new ProcessConfiguration
+                        {
+                            Type = c.Type,
+                            DisplayName = c.DisplayName,
+                            IsEnabled = c.IsEnabled,
+                            ExecutableDir = c.ExecutableDir,
+                            ExecutableName = c.ExecutableName,
+                            StartArguments = c.StartArguments,
+                            StatusCheckPattern = c.StatusCheckPattern,
+                            MapId = c.MapId
+                        }).ToList();
 
-                    AppSettings.ActivePresetName = selectedPreset.Name;
-                    
-                    // Refresh the DataGrid
-                    ProcessConfigDataGrid.ItemsSource = null;
-                    ProcessConfigDataGrid.ItemsSource = AppSettings.ProcessConfigurations;
-                    
-                    StatusBarText.Text = $"Loaded preset '{selectedPreset.Name}'. Remember to save settings.";
-                    NotificationManager.ShowSuccess("Preset Loaded", $"Configuration preset '{selectedPreset.Name}' has been loaded");
+                        AppSettings.ActivePresetName = selectedPreset.Name;
+                        
+                        // Refresh the DataGrid
+                        ProcessConfigDataGrid.ItemsSource = null;
+                        ProcessConfigDataGrid.ItemsSource = AppSettings.ProcessConfigurations;
+                        
+                        StatusBarText.Text = $"Loaded preset '{selectedPreset.Name}'. Remember to save settings.";
+                        NotificationManager.ShowSuccess("Preset Loaded", $"Configuration preset '{selectedPreset.Name}' has been loaded");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Failed to load preset '{selectedPreset.Name}' from file.", "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
         }
@@ -286,7 +293,7 @@ namespace PerfectWorldManager.Gui
                 var nameInput = nameDialog.ResponseText;
                 
                 // Check if preset name already exists
-                if (AppSettings.ProcessConfigPresets.Any(p => p.Name.Equals(nameInput, StringComparison.OrdinalIgnoreCase)))
+                if (PresetManager.PresetExists(nameInput))
                 {
                     MessageBox.Show($"A preset with the name '{nameInput}' already exists. Please choose a different name.",
                         "Preset Name Exists",
@@ -329,12 +336,12 @@ namespace PerfectWorldManager.Gui
                     }).ToList()
                 };
 
-                AppSettings.ProcessConfigPresets.Add(newPreset);
+                // Save preset to file
+                PresetManager.SavePreset(newPreset);
                 AppSettings.ActivePresetName = newPreset.Name;
                 
-                // Refresh ComboBox
-                PresetComboBox.ItemsSource = null;
-                PresetComboBox.ItemsSource = AppSettings.ProcessConfigPresets;
+                // Reload presets from files
+                LoadPresetsFromFiles();
                 PresetComboBox.SelectedValue = newPreset.Name;
                 
                 StatusBarText.Text = $"Created new preset '{nameInput}'. Remember to save settings.";
@@ -360,19 +367,32 @@ namespace PerfectWorldManager.Gui
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    selectedPreset.Configurations = AppSettings.ProcessConfigurations.Select(c => new ProcessConfiguration
+                    // Create updated preset
+                    var updatedPreset = new ProcessConfigurationPreset
                     {
-                        Type = c.Type,
-                        DisplayName = c.DisplayName,
-                        IsEnabled = c.IsEnabled,
-                        ExecutableDir = c.ExecutableDir,
-                        ExecutableName = c.ExecutableName,
-                        StartArguments = c.StartArguments,
-                        StatusCheckPattern = c.StatusCheckPattern,
-                        MapId = c.MapId
-                    }).ToList();
+                        Name = selectedPreset.Name,
+                        Description = selectedPreset.Description,
+                        IsReadOnly = selectedPreset.IsReadOnly,
+                        CreatedDate = selectedPreset.CreatedDate,
+                        LastModifiedDate = DateTime.Now,
+                        Configurations = AppSettings.ProcessConfigurations.Select(c => new ProcessConfiguration
+                        {
+                            Type = c.Type,
+                            DisplayName = c.DisplayName,
+                            IsEnabled = c.IsEnabled,
+                            ExecutableDir = c.ExecutableDir,
+                            ExecutableName = c.ExecutableName,
+                            StartArguments = c.StartArguments,
+                            StatusCheckPattern = c.StatusCheckPattern,
+                            MapId = c.MapId
+                        }).ToList()
+                    };
                     
-                    selectedPreset.LastModifiedDate = DateTime.Now;
+                    // Save updated preset to file
+                    PresetManager.SavePreset(updatedPreset);
+                    
+                    // Reload presets
+                    LoadPresetsFromFiles();
                     
                     StatusBarText.Text = $"Updated preset '{selectedPreset.Name}'. Remember to save settings.";
                     NotificationManager.ShowSuccess("Preset Updated", $"Configuration preset '{selectedPreset.Name}' has been updated");
@@ -398,22 +418,18 @@ namespace PerfectWorldManager.Gui
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    AppSettings.ProcessConfigPresets.Remove(selectedPreset);
+                    // Delete preset file
+                    PresetManager.DeletePreset(selectedPreset.Name);
                     
                     // Switch to default preset if deleted was active
                     if (AppSettings.ActivePresetName == selectedPreset.Name)
                     {
                         AppSettings.ActivePresetName = "15x";
-                        var defaultPreset = AppSettings.ProcessConfigPresets.FirstOrDefault(p => p.Name == "15x");
-                        if (defaultPreset != null)
-                        {
-                            LoadPresetButton_Click(sender, e);
-                        }
+                        LoadPresetButton_Click(sender, e);
                     }
                     
-                    // Refresh ComboBox
-                    PresetComboBox.ItemsSource = null;
-                    PresetComboBox.ItemsSource = AppSettings.ProcessConfigPresets;
+                    // Reload presets from files
+                    LoadPresetsFromFiles();
                     PresetComboBox.SelectedValue = AppSettings.ActivePresetName;
                     
                     StatusBarText.Text = $"Deleted preset '{selectedPreset.Name}'. Remember to save settings.";
@@ -1220,6 +1236,16 @@ namespace PerfectWorldManager.Gui
                 if (result == MessageBoxResult.Yes) { DisplayableMaps.Remove(selectedMap); StatusBarText.Text = $"Map '{selectedMap.MapName}' removed from local list. Save configurations to persist changes."; } // Consider localizing
             }
             else { MessageBox.Show("Please select a map to delete from the list.", "No Map Selected", MessageBoxButton.OK, MessageBoxImage.Information); } // Consider localizing
+        }
+
+        private void LoadPresetsFromFiles()
+        {
+            ProcessConfigPresets.Clear();
+            var presets = PresetManager.LoadAllPresets();
+            foreach (var preset in presets)
+            {
+                ProcessConfigPresets.Add(preset);
+            }
         }
 
         private static List<ProcessConfiguration> GetDefaultProcessConfigurations()
