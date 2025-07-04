@@ -566,23 +566,50 @@
         <Setter Property="FontSize" Value="{StaticResource ModernBaseFontSize}"/>
     </Style>
 
-    <!-- Simple TabItem styling without custom template -->
+    <!-- TabItem with custom template to ensure text visibility -->
     <Style TargetType="TabItem">
-        <Setter Property="Background" Value="{StaticResource ModernLighterBackgroundBrush}"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ModernBorderBrush}"/>
+        <Setter Property="Background" Value="#FF2D2D30"/>
+        <Setter Property="BorderBrush" Value="#FF3F3F46"/>
         <Setter Property="Padding" Value="10,6"/>
         <Setter Property="FontSize" Value="{StaticResource ModernBaseFontSize}"/>
         <Setter Property="FontFamily" Value="{StaticResource ModernFontFamily}"/>
-        <Style.Triggers>
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Foreground" Value="Black"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource ModernControlMouseOverBrush}"/>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Grid>
+                        <Border Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="4,4,0,0"
+                                Margin="0,0,2,0">
+                            <ContentPresenter x:Name="ContentSite"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            ContentSource="Header"
+                                            Margin="{TemplateBinding Padding}"
+                                            RecognizesAccessKey="True"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#FF3F3F46"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#FF007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter TargetName="Border" Property="Margin" Value="0,0,2,-1"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="#FF353538"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter Property="Foreground" Value="#FFB0B0B0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="ListView">
