@@ -563,6 +563,37 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="FontFamily" Value="{StaticResource ModernFontFamily}"/>
         <Setter Property="FontSize" Value="{StaticResource ModernBaseFontSize}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabControl">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TabPanel x:Name="HeaderPanel"
+                                  Grid.Row="0"
+                                  Panel.ZIndex="1"
+                                  Margin="0,0,4,-1"
+                                  IsItemsHost="True"
+                                  KeyboardNavigation.TabIndex="1"
+                                  Background="Transparent"/>
+                        <Border x:Name="Border"
+                                Grid.Row="1"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Background="{TemplateBinding Background}"
+                                KeyboardNavigation.TabNavigation="Local"
+                                KeyboardNavigation.DirectionalNavigation="Contained"
+                                KeyboardNavigation.TabIndex="2">
+                            <ContentPresenter x:Name="PART_SelectedContentHost"
+                                              Margin="{TemplateBinding Padding}"
+                                              ContentSource="SelectedContent"/>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="TabItem">
@@ -573,6 +604,8 @@
         <Setter Property="FontSize" Value="{StaticResource ModernBaseFontSize}"/>
         <Setter Property="FontFamily" Value="{StaticResource ModernFontFamily}"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource ModernFocusVisualStyle}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
