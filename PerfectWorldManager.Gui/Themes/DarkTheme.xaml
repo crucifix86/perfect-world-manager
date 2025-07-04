@@ -134,9 +134,9 @@
                             CornerRadius="6" Padding="{TemplateBinding Padding}"
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
                         <Border.RenderTransform>
-                            <ScaleTransform x:Name="ButtonScale" ScaleX="1" ScaleY="1" 
-                                          CenterX="0.5" CenterY="0.5"/>
+                            <ScaleTransform x:Name="ButtonScale" ScaleX="1" ScaleY="1"/>
                         </Border.RenderTransform>
+                        <Border.RenderTransformOrigin>0.5,0.5</Border.RenderTransformOrigin>
                         <Border.Effect>
                             <DropShadowEffect x:Name="ButtonShadow" BlurRadius="8" ShadowDepth="2" 
                                             Direction="270" Color="Black" Opacity="0"/>
@@ -174,10 +174,12 @@
                                     <Storyboard>
                                         <ColorAnimation Storyboard.TargetName="ButtonBorder"
                                                       Storyboard.TargetProperty="Background.Color"
+                                                      To="{StaticResource ModernLighterBackgroundColor}"
                                                       Duration="{StaticResource FastAnimationDuration}"
                                                       EasingFunction="{StaticResource StandardEase}"/>
                                         <ColorAnimation Storyboard.TargetName="ButtonBorder"
                                                       Storyboard.TargetProperty="BorderBrush.Color"
+                                                      To="{StaticResource ModernBorderColor}"
                                                       Duration="{StaticResource FastAnimationDuration}"
                                                       EasingFunction="{StaticResource StandardEase}"/>
                                         <DoubleAnimation Storyboard.TargetName="ButtonShadow"
@@ -809,17 +811,10 @@
         <Setter Property="Width" Value="12"/>
         <Setter Property="Height" Value="12"/>
         <Setter Property="Margin" Value="4"/>
+        <Setter Property="Fill" Value="{StaticResource ModernSecondaryTextBrush}"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Status}" Value="Running">
-                <DataTrigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Fill.Color"
-                                          To="{StaticResource ModernSuccessColor}"
-                                          Duration="0:0:0.3"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </DataTrigger.EnterActions>
+                <Setter Property="Fill" Value="{StaticResource ModernSuccessBrush}"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding Status}" Value="Stopped">
                 <Setter Property="Fill" Value="{StaticResource ModernErrorBrush}"/>
