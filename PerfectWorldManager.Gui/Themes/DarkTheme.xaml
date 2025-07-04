@@ -576,9 +576,11 @@
         <Setter Property="FontFamily" Value="{StaticResource ModernFontFamily}"/>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="{StaticResource ModernBackgroundBrush}"/>
-                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#FF2D2D30"/>
+                <Setter Property="Foreground" Value="#FFFFFF"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="BorderBrush" Value="#FF007ACC"/>
+                <Setter Property="BorderThickness" Value="0,0,0,2"/>
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource ModernControlMouseOverBrush}"/>
