@@ -4,15 +4,8 @@
         Title="Input" Height="180" Width="400"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Themes/DarkTheme.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     
-    <Grid Background="{StaticResource ModernBackgroundBrush}" Margin="15">
+    <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -23,15 +16,13 @@
         
         <TextBlock x:Name="PromptTextBlock" Grid.Row="0" Text="Enter value:" 
                    Margin="0,0,0,10" TextWrapping="Wrap"/>
-        <TextBox x:Name="InputTextBox" Grid.Row="1" Margin="0,0,0,10" 
-                 Style="{StaticResource ModernTextBoxStyle}"/>
+        <TextBox x:Name="InputTextBox" Grid.Row="1" Margin="0,0,0,10"/>
         <TextBlock x:Name="DescriptionTextBlock" Grid.Row="2" 
                    FontSize="11" Opacity="0.7" TextWrapping="Wrap"
                    Visibility="Collapsed"/>
         
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="OK" Width="80" Margin="0,0,10,0" 
-                    Style="{StaticResource AccentButtonStyle}"
                     Click="OkButton_Click" IsDefault="True"/>
             <Button Content="Cancel" Width="80" 
                     Click="CancelButton_Click" IsCancel="True"/>

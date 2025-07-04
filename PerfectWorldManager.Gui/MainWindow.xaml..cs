@@ -280,15 +280,17 @@ namespace PerfectWorldManager.Gui
 
         private void SavePresetAsButton_Click(object sender, RoutedEventArgs e)
         {
-            var nameDialog = new InputDialog(
-                "Enter a name for this preset:",
-                "Save Preset As",
-                "My Custom Preset")
+            try
             {
-                Owner = this
-            };
+                var nameDialog = new InputDialog(
+                    "Enter a name for this preset:",
+                    "Save Preset As",
+                    "My Custom Preset")
+                {
+                    Owner = this
+                };
 
-            if (nameDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(nameDialog.ResponseText))
+                if (nameDialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(nameDialog.ResponseText))
             {
                 var nameInput = nameDialog.ResponseText;
                 
@@ -346,6 +348,14 @@ namespace PerfectWorldManager.Gui
                 
                 StatusBarText.Text = $"Created new preset '{nameInput}'. Remember to save settings.";
                 NotificationManager.ShowSuccess("Preset Created", $"Configuration preset '{nameInput}' has been created");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error creating preset: {ex.Message}\n\nDetails: {ex.StackTrace}", 
+                    "Error", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
             }
         }
 
