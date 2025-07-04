@@ -66,7 +66,7 @@
                         </Grid.ColumnDefinitions>
                         
                         <TextBlock Text="Configuration Preset:" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
-                        <ComboBox Name="PresetComboBox" Grid.Column="1" 
+                        <ComboBox x:Name="PresetComboBox" Grid.Column="1" 
                                   ItemsSource="{Binding ProcessConfigPresets}"
                                   DisplayMemberPath="Name"
                                   SelectedValuePath="Name"
@@ -92,7 +92,7 @@
                 </Border>
                 
                 <!-- Process Configurations DataGrid -->
-                <DataGrid Grid.Row="2" Name="ProcessConfigDataGrid"
+                <DataGrid Grid.Row="2" x:Name="ProcessConfigDataGrid"
                           ItemsSource="{Binding ProcessConfigurations}" 
                           AutoGenerateColumns="False" 
                           CanUserAddRows="False" 

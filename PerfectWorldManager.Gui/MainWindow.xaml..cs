@@ -1391,8 +1391,7 @@ namespace PerfectWorldManager.Gui
             if (configWindow.ShowDialog() == true)
             {
                 // Settings were saved in the dialog
-                // Refresh the UI to show the updated active preset name
-                OnPropertyChanged(nameof(AppSettings));
+                // The dialog already handles saving and updating the UI
             }
         }
     }

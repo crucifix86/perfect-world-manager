@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using PerfectWorldManager.Core;
 using PerfectWorldManager.Core.Utils;
+using PerfectWorldManager.Gui.Services;
 
 namespace PerfectWorldManager.Gui.Dialogs
 {
