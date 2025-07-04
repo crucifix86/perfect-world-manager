@@ -22,6 +22,7 @@ using PerfectWorldManager.Gui.ViewModels; // For CharacterEditorViewModel
 // using PerfectWorldManager.Gui.Views;
 using PerfectWorldManager.Core.Services; // For IItemLookupService and ItemLookupService
 // using PerfectWorldManager.Gui.Utils; // For CharacterXmlParser (if it's there) - Ensure this is correct if ItemLookupService depends on it internally
+using PerfectWorldManager.Gui.Services;
 
 // ADDED for Localization
 using System.Globalization;
@@ -67,6 +68,9 @@ namespace PerfectWorldManager.Gui
             LoadSettingsToUi();
             InitializeServerProcessList();
             InitializeLanguageSelector(); // ADDED for Localization
+            
+            // Initialize notification system
+            NotificationManager.Initialize(NotificationContainer);
 
             if (this.FindName("AddCubiAmountTextBox") is TextBox cubiTextBox)
             {
@@ -180,6 +184,7 @@ namespace PerfectWorldManager.Gui
             UpdateAppSettingsFromUi();
             SettingsManager.SaveSettings(AppSettings);
             StatusBarText.Text = "Settings saved. Reconnect or re-initialize services for changes to take full effect."; // Consider localizing
+            NotificationManager.ShowSuccess("Settings Saved", "Configuration has been saved successfully");
             InitializeServerProcessList();
             InitializeServices(true); // Force re-init of services, including CharacterEditorViewModel
         }
@@ -206,10 +211,16 @@ namespace PerfectWorldManager.Gui
                 _daemonService = new DaemonGrpcService(AppSettings); // AppSettings now includes ApiKey
                 _daemonService_SettingsHash = currentDaemonSettingsHash;
 
-                _daemonService.ConnectionAttempting += (s, ev) => Dispatcher.Invoke(() => { StatusBarText.Text = "Connecting to daemon..."; _characterEditorViewModel?.UpdateCommandStates(); }); // Consider localizing
+                _daemonService.ConnectionAttempting += (s, ev) => Dispatcher.Invoke(() => { 
+                    StatusBarText.Text = "Connecting to daemon..."; 
+                    _characterEditorViewModel?.UpdateCommandStates(); 
+                    UpdateConnectionStatus(false, "Connecting...");
+                }); // Consider localizing
                 _daemonService.ConnectionEstablished += (s, ev) => Dispatcher.Invoke(async () => {
                     StatusBarText.Text = "Connected to daemon."; // Consider localizing
                     _characterEditorViewModel?.UpdateCommandStates();
+                    UpdateConnectionStatus(true);
+                    NotificationManager.ShowSuccess("Connected", "Successfully connected to daemon service");
                     var selectedItem = MainTabControl.SelectedItem as TabItem;
                     if (selectedItem == DashboardTabItem || selectedItem == MapManagementTabItem)
                     {
@@ -223,12 +234,16 @@ namespace PerfectWorldManager.Gui
                 _daemonService.ConnectionFailed += (s, errMsg) => Dispatcher.Invoke(() => {
                     StatusBarText.Text = $"Daemon connection failed: {errMsg}"; // Consider localizing
                     _characterEditorViewModel?.UpdateCommandStates();
+                    UpdateConnectionStatus(false);
+                    NotificationManager.ShowError("Connection Failed", errMsg);
                 });
                 _daemonService.Disconnected += (s, ev) => Dispatcher.Invoke(() => {
                     StatusBarText.Text = "Disconnected from daemon."; // Consider localizing
                     foreach (var proc in ServerProcesses) { proc.Status = ProcessStatus.Unknown; proc.StatusDetails = "Daemon Disconnected"; } // Consider localizing
                     if (DisplayableMaps != null) foreach (var map in DisplayableMaps) { map.IsCurrentlyRunning = false; }
                     _characterEditorViewModel?.UpdateCommandStates();
+                    UpdateConnectionStatus(false);
+                    NotificationManager.ShowWarning("Disconnected", "Connection to daemon service lost");
                 });
             }
 
@@ -387,7 +402,10 @@ namespace PerfectWorldManager.Gui
                 Debug.WriteLine($"Error during parallel status refresh: {ex.Message}");
                 await Dispatcher.InvokeAsync(() => StatusBarText.Text = $"Error during status refresh: {ex.Message.Split('\n')[0]}"); // Consider localizing
             }
-            await Dispatcher.InvokeAsync(() => StatusBarText.Text = "Server status refreshed."); // Consider localizing
+            await Dispatcher.InvokeAsync(() => {
+                StatusBarText.Text = "Server status refreshed."; // Consider localizing
+                UpdateServiceCounts();
+            });
             _characterEditorViewModel?.UpdateCommandStates();
         }
 
@@ -988,6 +1006,39 @@ namespace PerfectWorldManager.Gui
                 new ProcessConfiguration(ProcessType.PwAdmin, "PWAdmin Panel", true, "" , "./startup.sh", "", "pwadmin"),
                 new ProcessConfiguration(ProcessType.AntiCrash, "Anti-Crash", true, "" , "./anti_crash", "", "./anti_crash")
             };
+        }
+
+        private void UpdateConnectionStatus(bool isConnected, string statusText = null)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (ConnectionIndicator != null)
+                {
+                    ConnectionIndicator.Fill = isConnected 
+                        ? Application.Current.FindResource("ModernSuccessBrush") as Brush 
+                        : Application.Current.FindResource("ModernErrorBrush") as Brush;
+                }
+                
+                if (ConnectionStatusText != null)
+                {
+                    ConnectionStatusText.Text = statusText ?? (isConnected ? "Connected" : "Disconnected");
+                }
+            });
+        }
+        
+        private void UpdateServiceCounts()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (RunningCountText != null && StoppedCountText != null)
+                {
+                    var runningCount = ServerProcesses.Count(p => p.Status == ProcessStatus.Running);
+                    var stoppedCount = ServerProcesses.Count(p => p.Status == ProcessStatus.Stopped);
+                    
+                    RunningCountText.Text = runningCount.ToString();
+                    StoppedCountText.Text = stoppedCount.ToString();
+                }
+            });
         }
 
         protected override void OnClosed(EventArgs e)

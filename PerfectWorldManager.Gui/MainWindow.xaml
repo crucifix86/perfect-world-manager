@@ -14,21 +14,90 @@
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
     <Grid>
+        <!-- Main Content -->
         <TabControl x:Name="MainTabControl" SelectionChanged="MainTabControl_SelectionChanged">
             <TabItem Header="{DynamicResource Tab_Dashboard}" x:Name="DashboardTab">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Margin="10" Grid.Row="0">
-                        <Button Content="{DynamicResource Dashboard_ConnectDaemon}" x:Name="ConnectDaemonButton" Margin="5" Padding="10,5" Click="ConnectDaemonButton_Click" ToolTip="Initialize connection to the management daemon"/>
-                        <Button Content="{DynamicResource Dashboard_RefreshStatus}" x:Name="RefreshStatusButton" Margin="5" Padding="10,5" Click="RefreshStatusButton_Click"/>
-                        <Button Content="{DynamicResource Dashboard_StartAllServices}" x:Name="StartAllServicesButton" Margin="5" Padding="10,5" Background="LightGreen" Click="StartAllServicesButton_Click"/>
-                        <Button Content="{DynamicResource Dashboard_StopAllServices}" x:Name="StopAllServicesButton" Margin="5" Padding="10,5" Background="Salmon" Click="StopAllServicesButton_Click"/>
-                    </StackPanel>
-                    <ListView Name="ProcessListView" Margin="10" Grid.Row="1" ItemsSource="{Binding ServerProcesses}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Quick Actions Bar -->
+                        <Border Grid.Row="0" Style="{StaticResource ModernCard}" Margin="8,8,8,0">
+                            <StackPanel>
+                                <TextBlock Text="Quick Actions" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" Foreground="{DynamicResource ModernAccentBrush}"/>
+                                <WrapPanel>
+                                    <Button Content="{DynamicResource Dashboard_ConnectDaemon}" 
+                                            x:Name="ConnectDaemonButton" 
+                                            Margin="0,0,8,0" 
+                                            Padding="12,8" 
+                                            Click="ConnectDaemonButton_Click" 
+                                            ToolTip="Initialize connection to the management daemon"
+                                            Style="{StaticResource AccentButtonStyle}"/>
+                                    <Button Content="{DynamicResource Dashboard_RefreshStatus}" 
+                                            x:Name="RefreshStatusButton" 
+                                            Margin="0,0,8,0" 
+                                            Padding="12,8" 
+                                            Click="RefreshStatusButton_Click"/>
+                                    <Button Content="{DynamicResource Dashboard_StartAllServices}" 
+                                            x:Name="StartAllServicesButton" 
+                                            Margin="0,0,8,0" 
+                                            Padding="12,8" 
+                                            Background="{DynamicResource ModernSuccessBrush}" 
+                                            Click="StartAllServicesButton_Click"/>
+                                    <Button Content="{DynamicResource Dashboard_StopAllServices}" 
+                                            x:Name="StopAllServicesButton" 
+                                            Padding="12,8" 
+                                            Background="{DynamicResource ModernErrorBrush}" 
+                                            Click="StopAllServicesButton_Click"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Status Overview Cards -->
+                        <UniformGrid Grid.Row="1" Rows="1" Columns="4" Margin="0,8,0,0">
+                            <Border Style="{StaticResource ModernCard}" Margin="8,0,4,0">
+                                <StackPanel>
+                                    <TextBlock Text="Total Services" FontSize="12" Opacity="0.7"/>
+                                    <TextBlock Text="{Binding ServerProcesses.Count}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource ModernAccentBrush}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource ModernCard}" Margin="4,0">
+                                <StackPanel>
+                                    <TextBlock Text="Running" FontSize="12" Opacity="0.7"/>
+                                    <TextBlock x:Name="RunningCountText" Text="0" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource ModernSuccessBrush}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource ModernCard}" Margin="4,0">
+                                <StackPanel>
+                                    <TextBlock Text="Stopped" FontSize="12" Opacity="0.7"/>
+                                    <TextBlock x:Name="StoppedCountText" Text="0" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource ModernErrorBrush}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource ModernCard}" Margin="4,0,8,0">
+                                <StackPanel>
+                                    <TextBlock Text="Connection" FontSize="12" Opacity="0.7"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse x:Name="ConnectionIndicator" Width="16" Height="16" Fill="{DynamicResource ModernErrorBrush}" Margin="0,0,8,0"/>
+                                        <TextBlock x:Name="ConnectionStatusText" Text="Disconnected" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                        
+                        <!-- Services List -->
+                        <Border Grid.Row="2" Style="{StaticResource ModernCard}" Margin="8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Services" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" Foreground="{DynamicResource ModernAccentBrush}"/>
+                                <ListView Name="ProcessListView" Grid.Row="1" ItemsSource="{Binding ServerProcesses}" Background="Transparent" BorderThickness="0">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="{DynamicResource Dashboard_ProcessName}" Width="200" DisplayMemberBinding="{Binding DisplayName}"/>
@@ -78,12 +147,16 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <StatusBar Grid.Row="2">
+                            </Grid>
+                        </Border>
+                        
+                    <StatusBar Grid.Row="3">
                         <StatusBarItem>
                             <TextBlock Name="StatusBarText" Text="{DynamicResource Text_Ready}"/>
                         </StatusBarItem>
                     </StatusBar>
-                </Grid>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="{DynamicResource Tab_Settings}" x:Name="SettingsTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
@@ -381,5 +454,11 @@
             </TabItem>
 
         </TabControl>
+        
+        <!-- Notification Container -->
+        <Grid x:Name="NotificationContainer" 
+              IsHitTestVisible="False"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Right"/>
     </Grid>
 </Window>
