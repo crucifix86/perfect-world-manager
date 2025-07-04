@@ -1,0 +1,133 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="MainWindow_Title">Менеджер Perfect World</system:String>
+    <system:String x:Key="Tab_Dashboard">Панель управления</system:String>
+    <system:String x:Key="Tab_Settings">Настройки</system:String>
+    <system:String x:Key="Tab_Accounts">Аккаунты</system:String>
+    <system:String x:Key="Tab_MapManagement">Управление картами</system:String>
+    <system:String x:Key="Tab_CharacterEditor">Редактор персонажей</system:String>
+    <system:String x:Key="Dashboard_ConnectDaemon">Подключиться к демону</system:String>
+    <system:String x:Key="Dashboard_RefreshStatus">Обновить статус</system:String>
+    <system:String x:Key="Dashboard_StartAllServices">Запустить все службы</system:String>
+    <system:String x:Key="Dashboard_StopAllServices">Остановить все службы</system:String>
+    <system:String x:Key="Dashboard_ProcessName">Имя службы</system:String>
+    <system:String x:Key="Dashboard_Status">Статус</system:String>
+    <system:String x:Key="Dashboard_Details">Детали</system:String>
+    <system:String x:Key="Dashboard_Actions">Действия</system:String>
+    <system:String x:Key="Dashboard_Start">Запустить</system:String>
+    <system:String x:Key="Dashboard_Stop">Остановить</system:String>
+    <system:String x:Key="Text_Ready">Готово</system:String>
+
+    <system:String x:Key="Settings_DaemonServiceSettings">Настройки службы демона</system:String>
+    <system:String x:Key="Settings_DaemonServiceUrl">URL демона:</system:String>
+    <system:String x:Key="Settings_ApiKey">API ключ:</system:String>
+    <system:String x:Key="Settings_GenerateApiKey">Сгенерировать</system:String>
+    <system:String x:Key="Settings_ApplicationSettings">Настройки приложения</system:String>
+    <system:String x:Key="Settings_Language">Язык:</system:String>
+    <system:String x:Key="Settings_ServerPathSettings">Настройки путей сервера (Ссылка клиента / Параметры демона)</system:String>
+    <system:String x:Key="Settings_ServerPathSettings_Desc">Эти пути используются клиентом для контекста или в качестве параметров для демона. Сам демон должен иметь собственную основную конфигурацию для этих путей на сервере.</system:String>
+    <system:String x:Key="Settings_ServerBaseDir">Базовый каталог сервера (Контекст):</system:String>
+    <system:String x:Key="Settings_MapsFilePath">Путь к файлу карт (Клиент):</system:String>
+    <system:String x:Key="Settings_LogsDir">Каталог логов (Контекст демона):</system:String>
+    <system:String x:Key="Settings_PwAdminDir">Каталог PWAdmin (Контекст демона):</system:String>
+    <system:String x:Key="Settings_PwAdminUrl">URL PWAdmin (Клиент):</system:String>
+    <system:String x:Key="Settings_BackupStorageDir">Каталог хранения резервных копий (Клиент):</system:String>
+    <system:String x:Key="Settings_CharEditorPaths">Пути к ресурсам редактора персонажей (Клиентская сторона)</system:String>
+    <system:String x:Key="Settings_ItemTxtPath">Путь к Item.txt:</system:String>
+    <system:String x:Key="Settings_ItemIconsPath">Путь к иконкам предметов:</system:String>
+    <system:String x:Key="Settings_MySQLSettings">Настройки MySQL</system:String>
+    <system:String x:Key="Settings_MySQLHost">Хост MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLPort">Порт MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLUser">Пользователь MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLPassword">Пароль MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLDatabase">База данных MySQL:</system:String>
+    <system:String x:Key="Settings_ProcessConfigs">Конфигурации процессов (Используется демоном)</system:String>
+    <system:String x:Key="Settings_ProcessConfigs_Desc">Отредактируйте индивидуальные конфигурации процессов ниже. Эти данные будут переданы демону для выполнения...</system:String>
+    <system:String x:Key="Settings_Col_Type">Тип</system:String>
+    <system:String x:Key="Settings_Col_DisplayName">Отображаемое имя</system:String>
+    <system:String x:Key="Settings_Col_Enabled">Включено</system:String>
+    <system:String x:Key="Settings_Col_ExecDir">Каталог запуска (Отн.)</system:String>
+    <system:String x:Key="Settings_Col_ExecutableName">Имя исполняемого файла</system:String>
+    <system:String x:Key="Settings_Col_StartArgs">Аргументы запуска</system:String>
+    <system:String x:Key="Settings_Col_StatusPattern">Шаблон статуса</system:String>
+    <system:String x:Key="Settings_Col_MapID">ID карты (если gs)</system:String>
+    <system:String x:Key="Settings_SaveButton">Сохранить настройки</system:String>
+
+    <system:String x:Key="Accounts_CreateAccount">Создать аккаунт</system:String>
+    <system:String x:Key="Accounts_Username">Имя пользователя (4-10 симв.):</system:String>
+    <system:String x:Key="Accounts_Password">Пароль (4-10 симв.):</system:String>
+    <system:String x:Key="Accounts_Email">Email:</system:String>
+    <system:String x:Key="Accounts_CreateAccount_Button">Создать аккаунт</system:String>
+    <system:String x:Key="Accounts_ChangePassword">Изменить пароль</system:String>
+    <system:String x:Key="Accounts_OldPassword">Старый пароль:</system:String>
+    <system:String x:Key="Accounts_NewPassword">Новый пароль (4-10 симв.):</system:String>
+    <system:String x:Key="Accounts_ChangePassword_Button">Изменить пароль</system:String>
+    <system:String x:Key="Accounts_AddCubi">Добавить золото</system:String>
+    <system:String x:Key="Accounts_Identifier">Идентификатор (Имя пользователя или ID):</system:String>
+    <system:String x:Key="Accounts_IdentifierType">Тип идентификатора:</system:String>
+    <system:String x:Key="Accounts_Username_Identifier">Имя пользователя</system:String>
+    <system:String x:Key="Accounts_UserID_Identifier">ID пользователя</system:String>
+    <system:String x:Key="Accounts_Amount">Количество (1-999999):</system:String>
+    <system:String x:Key="Accounts_AddCubi_Button">Добавить золото</system:String>
+    <system:String x:Key="Accounts_SetGMStatus">Установить статус ГМ</system:String>
+    <system:String x:Key="Accounts_Action">Действие:</system:String>
+    <system:String x:Key="Accounts_GrantGM">Предоставить доступ ГМ</system:String>
+    <system:String x:Key="Accounts_RevokeGM">Отозвать доступ ГМ</system:String>
+    <system:String x:Key="Accounts_SetGMStatus_Button">Установить статус ГМ</system:String>
+    <system:String x:Key="Accounts_DeleteAccount">Удалить аккаунт</system:String>
+    <system:String x:Key="Accounts_Type">Тип:</system:String>
+    <system:String x:Key="Accounts_DeleteAccount_Button">Удалить аккаунт</system:String>
+    <system:String x:Key="Accounts_BrowseAccounts">Просмотр аккаунтов</system:String>
+    <system:String x:Key="Accounts_RefreshList">Обновить список</system:String>
+    <system:String x:Key="Accounts_Col_ID">ID</system:String>
+    <system:String x:Key="Accounts_Col_Name">Имя</system:String>
+    <system:String x:Key="Accounts_Col_Email">Email</system:String>
+    <system:String x:Key="Accounts_Col_Created">Создан</system:String>
+    <system:String x:Key="Accounts_Col_GM">ГМ</system:String>
+
+    <system:String x:Key="Maps_AddNewMap">Добавить новую карту</system:String>
+    <system:String x:Key="Maps_DeleteSelectedMap">Удалить выбранную карту</system:String>
+    <system:String x:Key="Maps_SaveMapConfigs">Сохранить конфигурации карт</system:String>
+    <system:String x:Key="Maps_ReloadAndRefresh">Перезагрузить список и обновить статусы</system:String>
+    <system:String x:Key="Maps_Col_AutoStart">Автозапуск</system:String>
+    <system:String x:Key="Maps_Col_MapID">ID карты</system:String>
+    <system:String x:Key="Maps_Col_MapName">Название карты</system:String>
+    <system:String x:Key="Maps_Col_CurrentStatus">Текущий статус</system:String>
+    <system:String x:Key="Maps_Col_Actions">Действия</system:String>
+    <system:String x:Key="Maps_Start">Запустить</system:String>
+    <system:String x:Key="Maps_Stop">Остановить</system:String>
+
+    <system:String x:Key="CharacterEditor_CharacterIDLabel">ID персонажа:</system:String>
+    <system:String x:Key="CharacterEditor_LoadCharacterButton">Загрузить персонажа</system:String>
+    <system:String x:Key="CharacterEditor_RefreshCharacterButton">Обновить персонажа</system:String>
+    <system:String x:Key="CharacterEditor_SaveCharacterButton">Сохранить персонажа</system:String>
+    <system:String x:Key="CharacterEditor_SyncGuiToXmlButton">Синхронизировать GUI в XML</system:String>
+    <system:String x:Key="CharacterEditor_SyncXmlToGuiButton">Синхронизировать XML в GUI</system:String>
+
+    <system:String x:Key="CharacterEditor_TabGuiEditor">Редактор GUI</system:String>
+    <system:String x:Key="CharacterEditor_TabBaseInfo">Основная информация</system:String>
+    <system:String x:Key="CharacterEditor_TabStatusInfo">Статус</system:String>
+    <system:String x:Key="CharacterEditor_TabInventoryAndSafe">Инвентарь и хранилище</system:String>
+    <system:String x:Key="CharacterEditor_EquipmentLabel">Снаряжение</system:String>
+    <system:String x:Key="CharacterEditor_PocketMoneyLabel">Деньги в кармане:</system:String>
+    <system:String x:Key="CharacterEditor_PocketItemsLabel">Предметы в кармане</system:String>
+    <system:String x:Key="CharacterEditor_StorehouseMoneyLabel">Деньги в хранилище:</system:String>
+    <system:String x:Key="CharacterEditor_StorehouseItemsLabel">Предметы в хранилище</system:String>
+    <system:String x:Key="CharacterEditor_DetailsForItemLabelPart">Детали для:</system:String>
+    <system:String x:Key="CharacterEditor_TabTaskInfo">Информация о заданиях</system:String>
+
+    <system:String x:Key="CharacterEditor_TabRawXmlEditor">Редактор Raw XML</system:String>
+    <system:String x:Key="CharacterEditor_TabPlayerCharacters">Персонажи игрока</system:String>
+    <system:String x:Key="CharacterEditor_PlayerUserIDLabel">ID пользователя игрока:</system:String>
+    <system:String x:Key="CharacterEditor_SearchCharactersButton">Найти персонажей</system:String>
+
+    <system:String x:Key="CharacterEditor_ColCharID">ID персонажа (ID роли)</system:String>
+    <system:String x:Key="CharacterEditor_ColCharName">Имя персонажа</system:String>
+
+    <system:String x:Key="CharacterEditor_LoadingText">Загрузка...</system:String>
+
+    <system:String x:Key="Status_LanguageChangedRestart">Язык изменен. Для полного применения может потребоваться перезапуск.</system:String>
+
+</ResourceDictionary>

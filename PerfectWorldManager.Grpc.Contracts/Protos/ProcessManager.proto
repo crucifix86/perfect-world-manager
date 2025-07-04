@@ -1,0 +1,211 @@
+syntax = "proto3";
+
+// Option to set the C# namespace for generated code
+option csharp_namespace = "PerfectWorldManager.Grpc";
+
+package ProcessManager;
+
+// The service definition.
+service Manager {
+  // Starts a process
+  rpc StartProcess (StartProcessRequest) returns (ProcessResponse);
+  // Stops a process
+  rpc StopProcess (StopProcessRequest) returns (ProcessResponse);
+  // Gets the status of a process
+  rpc GetProcessStatus (ProcessStatusRequest) returns (ProcessStatusResponse);
+
+  // Starts a map
+  rpc StartMap (StartMapRequest) returns (ProcessResponse);
+  // Stops a map
+  rpc StopMap (StopMapRequest) returns (ProcessResponse);
+  // Gets the status of a map
+  rpc GetMapStatus (MapStatusRequest) returns (MapStatusResponse);
+
+  // Executes a generic command/script
+  rpc ExecuteCommand (ExecuteCommandRequest) returns (ExecuteCommandResponse);
+
+  // RPCs for Character Editor
+  rpc ExportCharacterData (ExportCharacterRequest) returns (CharacterDataResponse);
+  rpc ImportCharacterData (ImportCharacterRequest) returns (ImportCharacterResponse);
+
+  // NEW RPC for getting player characters
+  rpc GetPlayerCharacters (GetPlayerCharactersRequest) returns (GetPlayerCharactersResponse);
+
+  // ----- Account Management RPCs -----
+  rpc CreateAccount (CreateAccountRequest) returns (AccountActionResponse);
+  rpc ChangePassword (ChangePasswordRequest) returns (AccountActionResponse);
+  rpc AddCubi (AddCubiRequest) returns (AccountActionResponse);
+  rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse);
+  rpc SetGmStatus (SetGmStatusRequest) returns (AccountActionResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (AccountActionResponse);
+}
+
+// ----- Process Management Messages -----
+message StartProcessRequest {
+  string process_key = 1;
+  string executable_name = 2;
+  string arguments = 3;
+  string working_directory = 4;
+  string log_file_name_base = 5;
+}
+
+message StopProcessRequest {
+  string process_key = 1;
+  string status_check_pattern = 2;
+}
+
+message ProcessStatusRequest {
+  string process_key = 1;
+  string status_check_pattern = 2;
+}
+
+message ProcessResponse {
+  bool success = 1;
+  string message = 2;
+  int32 process_id = 3;
+}
+
+message ProcessStatusResponse {
+  enum Status {
+    UNKNOWN = 0;
+    STOPPED = 1;
+    RUNNING = 2;
+    STARTING = 3;
+    STOPPING = 4;
+    ERROR = 5;
+  }
+  Status status = 1;
+  string details = 2;
+}
+
+// ----- Map Management Messages -----
+message StartMapRequest {
+  string map_id = 1;
+  bool is_main_world_server_with_map_list = 2;
+  repeated string additional_map_ids = 3;
+}
+
+message StopMapRequest {
+  string map_id = 1;
+}
+
+message MapStatusRequest {
+  string map_id = 1;
+}
+
+message MapStatusResponse {
+  bool is_running = 1;
+  string details = 2;
+}
+
+// ----- Generic Command Execution -----
+message ExecuteCommandRequest {
+  string command = 1;
+  string working_directory = 2;
+}
+
+message ExecuteCommandResponse {
+  bool success = 1;
+  string output = 2;
+  string error_output = 3;
+  int32 exit_code = 4;
+}
+
+// ----- Character Editor Messages -----
+message ExportCharacterRequest {
+  string character_id = 1;
+}
+
+message CharacterDataResponse {
+  string xml_data = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// ----- Account Management Messages -----
+
+// General response for account actions
+message AccountActionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Create Account
+message CreateAccountRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+}
+
+// Change Password
+message ChangePasswordRequest {
+  string username = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+// Add Cubi
+message AddCubiRequest {
+  string identifier = 1; // Username or User ID
+  bool is_by_id = 2;
+  int32 amount = 3;
+}
+
+// User Info for GetAllUsers
+message UserAccountInfoMessage {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  string create_time = 4; // Using string for timestamp, can be parsed on client
+  bool is_gm = 5;
+}
+
+// Get All Users
+message GetAllUsersRequest {
+  // No parameters needed for now, could add pagination/filtering later
+}
+
+message GetAllUsersResponse {
+  repeated UserAccountInfoMessage users = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// Set GM Status
+message SetGmStatusRequest {
+  string identifier = 1; // Username or User ID
+  bool is_by_id = 2;
+  bool grant_access = 3;
+}
+
+// Delete User
+message DeleteUserRequest {
+  string identifier = 1; // Username or User ID
+  bool is_by_id = 2;
+}
+
+message ImportCharacterRequest {
+  string character_id = 1;
+  string xml_data = 2;
+}
+
+message ImportCharacterResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ----- New Messages for GetPlayerCharacters -----
+message PlayerCharacterItem {
+  int32 role_id = 1;
+  string role_name = 2;
+}
+
+message GetPlayerCharactersRequest {
+  int32 user_id = 1;
+}
+
+message GetPlayerCharactersResponse {
+  repeated PlayerCharacterItem characters = 1;
+  bool success = 2;
+  string message = 3;
+}

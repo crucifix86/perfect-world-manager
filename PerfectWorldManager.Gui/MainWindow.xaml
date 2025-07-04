@@ -1,0 +1,385 @@
+﻿<Window x:Class="PerfectWorldManager.Gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PerfectWorldManager.Gui"
+        xmlns:converters="clr-namespace:PerfectWorldManager.Gui.Converters"
+        xmlns:core="clr-namespace:PerfectWorldManager.Core;assembly=PerfectWorldManager.Core"
+        mc:Ignorable="d"
+        Title="{DynamicResource MainWindow_Title}" Height="700" Width="1000">
+    <Window.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <converters:BooleanToRunningStatusConverter x:Key="BooleanToRunningStatusConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid>
+        <TabControl x:Name="MainTabControl" SelectionChanged="MainTabControl_SelectionChanged">
+            <TabItem Header="{DynamicResource Tab_Dashboard}" x:Name="DashboardTab">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Margin="10" Grid.Row="0">
+                        <Button Content="{DynamicResource Dashboard_ConnectDaemon}" x:Name="ConnectDaemonButton" Margin="5" Padding="10,5" Click="ConnectDaemonButton_Click" ToolTip="Initialize connection to the management daemon"/>
+                        <Button Content="{DynamicResource Dashboard_RefreshStatus}" x:Name="RefreshStatusButton" Margin="5" Padding="10,5" Click="RefreshStatusButton_Click"/>
+                        <Button Content="{DynamicResource Dashboard_StartAllServices}" x:Name="StartAllServicesButton" Margin="5" Padding="10,5" Background="LightGreen" Click="StartAllServicesButton_Click"/>
+                        <Button Content="{DynamicResource Dashboard_StopAllServices}" x:Name="StopAllServicesButton" Margin="5" Padding="10,5" Background="Salmon" Click="StopAllServicesButton_Click"/>
+                    </StackPanel>
+                    <ListView Name="ProcessListView" Margin="10" Grid.Row="1" ItemsSource="{Binding ServerProcesses}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="{DynamicResource Dashboard_ProcessName}" Width="200" DisplayMemberBinding="{Binding DisplayName}"/>
+                                <GridViewColumn Header="{DynamicResource Dashboard_Status}" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Status}" FontWeight="Bold">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Running">
+                                                                <Setter Property="Foreground" Value="Green"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Stopped">
+                                                                <Setter Property="Foreground" Value="Red"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Unknown">
+                                                                <Setter Property="Foreground" Value="Gray"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Error">
+                                                                <Setter Property="Foreground" Value="OrangeRed"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Starting">
+                                                                <Setter Property="Foreground" Value="DarkBlue"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Stopping">
+                                                                <Setter Property="Foreground" Value="DarkGoldenrod"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="{DynamicResource Dashboard_Details}" Width="200" DisplayMemberBinding="{Binding StatusDetails}"/>
+                                <GridViewColumn Header="{DynamicResource Dashboard_Actions}" Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="{DynamicResource Dashboard_Start}" Margin="2" Tag="{Binding}" Click="StartSingleProcessButton_Click"/>
+                                                <Button Content="{DynamicResource Dashboard_Stop}" Margin="2" Tag="{Binding}" Click="StopSingleProcessButton_Click"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StatusBar Grid.Row="2">
+                        <StatusBarItem>
+                            <TextBlock Name="StatusBarText" Text="{DynamicResource Text_Ready}"/>
+                        </StatusBarItem>
+                    </StatusBar>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{DynamicResource Tab_Settings}" x:Name="SettingsTab">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="5">
+                    <StackPanel Margin="10" Name="SettingsPanel">
+
+                        <TextBlock Text="{DynamicResource Settings_DaemonServiceSettings}" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="{DynamicResource Settings_DaemonServiceUrl}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="DaemonUrlTextBox" Grid.Row="0" Grid.Column="1" Margin="5" ToolTip="URL of the Perfect World Manager Daemon service (e.g., http://localhost:50051)" Text="{Binding AppSettings.DaemonServiceUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="{DynamicResource Settings_ApiKey}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="ApiKeyTextBox" Grid.Row="1" Grid.Column="1" Margin="5" ToolTip="API Key for authenticating with the daemon." Text="{Binding AppSettings.ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Name="GenerateApiKeyButton" Content="{DynamicResource Settings_GenerateApiKey}" Grid.Row="1" Grid.Column="2" Margin="5" Padding="5,2" Click="GenerateApiKeyButton_Click" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="{DynamicResource Settings_ApplicationSettings}" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="{DynamicResource Settings_Language}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                            <ComboBox Name="LanguageSelectorComboBox" Grid.Row="0" Grid.Column="1" Width="200" Margin="5,2" SelectionChanged="LanguageSelectorComboBox_SelectionChanged" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="English" Tag="en-US"/>
+                                <ComboBoxItem Content="Bahasa Indonesia" Tag="id-ID"/>
+                                <ComboBoxItem Content="Русский" Tag="ru-RU"/>
+                                <ComboBoxItem Content="Português" Tag="pt-PT"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <TextBlock Text="{DynamicResource Settings_ServerPathSettings}" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,5" FontStyle="Italic" FontSize="11" Text="{DynamicResource Settings_ServerPathSettings_Desc}"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="{DynamicResource Settings_ServerBaseDir}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="ServerDirTextBox" Grid.Row="0" Grid.Column="1" Margin="5,2" ToolTip="Path on the server, used as context for daemon operations." Text="{Binding AppSettings.ServerDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="{DynamicResource Settings_MapsFilePath}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="MapsFilePathTextBox" Grid.Row="1" Grid.Column="1" Margin="5,2" ToolTip="Path to the local 'user_maps.csv' used by this client for map definitions." Text="{Binding AppSettings.MapsFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="{DynamicResource Settings_LogsDir}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="LogsDirTextBox" Grid.Row="2" Grid.Column="1" Margin="5,2" ToolTip="Path on the server where daemon stores logs for processes it starts." Text="{Binding AppSettings.LogsDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="{DynamicResource Settings_PwAdminDir}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="PwAdminDirTextBox" Grid.Row="3" Grid.Column="1" Margin="5,2" ToolTip="Path to PWAdmin related utilities on the server (e.g., for updater script)." Text="{Binding AppSettings.PwAdminDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="{DynamicResource Settings_PwAdminUrl}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="PwAdminUrlTextBox" Grid.Row="4" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.PwAdminUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="{DynamicResource Settings_BackupStorageDir}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="BackupStorageDirTextBox" Grid.Row="5" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.BackupStorageDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+
+                        <TextBlock Text="{DynamicResource Settings_CharEditorPaths}" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="{DynamicResource Settings_ItemTxtPath}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="ItemTxtPathTextBox" Grid.Row="0" Grid.Column="1" Margin="5,2" ToolTip="Full path to your item.txt file (used by Character Editor GUI)" Text="{Binding AppSettings.ItemTxtPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Label Content="{DynamicResource Settings_ItemIconsPath}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="ItemIconsPathTextBox" Grid.Row="1" Grid.Column="1" Margin="5,2" ToolTip="Full path to the directory containing item icons (used by Character Editor GUI)" Text="{Binding AppSettings.ItemIconsPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+
+                        <TextBlock Text="{DynamicResource Settings_MySQLSettings}" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Content="{DynamicResource Settings_MySQLHost}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="MySqlHostTextBox" Grid.Row="0" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlHost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="{DynamicResource Settings_MySQLPort}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="MySqlPortTextBox" Grid.Row="1" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="{DynamicResource Settings_MySQLUser}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="MySqlUserTextBox" Grid.Row="2" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="{DynamicResource Settings_MySQLPassword}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+                            <PasswordBox Name="MySqlPasswordBox" Grid.Row="3" Grid.Column="1" Margin="5,2"/>
+                            <Label Content="{DynamicResource Settings_MySQLDatabase}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBox Name="MySqlDatabaseTextBox" Grid.Row="4" Grid.Column="1" Margin="5,2" Text="{Binding AppSettings.MySqlDatabase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+
+                        <Separator Margin="0,15,0,10"/>
+                        <TextBlock Text="{DynamicResource Settings_ProcessConfigs}" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" FontStyle="Italic" FontSize="11" Text="{DynamicResource Settings_ProcessConfigs_Desc}"/>
+                        <DataGrid Name="ProcessConfigDataGrid" ItemsSource="{Binding AppSettings.ProcessConfigurations}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="400" Margin="0,0,0,10" HeadersVisibility="Column" GridLinesVisibility="Horizontal" BorderBrush="LightGray" BorderThickness="1">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="{DynamicResource Settings_Col_Type}" Binding="{Binding Type}" IsReadOnly="True" Width="100" MinWidth="100"/>
+                                <DataGridTextColumn Header="{DynamicResource Settings_Col_DisplayName}" Binding="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="150"/>
+                                <DataGridCheckBoxColumn Header="{DynamicResource Settings_Col_Enabled}" Binding="{Binding IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="80" MinWidth="60"/>
+                                <DataGridTextColumn Header="{DynamicResource Settings_Col_ExecDir}" Binding="{Binding ExecutableDir, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="120" MinWidth="100"/>
+                                <DataGridTextColumn Header="{DynamicResource Settings_Col_ExecutableName}" Binding="{Binding ExecutableName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="120"/>
+                                <DataGridTextColumn Header="{DynamicResource Settings_Col_StartArgs}" Binding="{Binding StartArguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="150"/>
+                                <DataGridTextColumn Header="{DynamicResource Settings_Col_StatusPattern}" Binding="{Binding StatusCheckPattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="*" MinWidth="150"/>
+                                <DataGridTextColumn Header="{DynamicResource Settings_Col_MapID}" Binding="{Binding MapId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" MinWidth="80"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Content="{DynamicResource Settings_SaveButton}" x:Name="SaveSettingsButton" Margin="0,10,0,10" Padding="10,5" HorizontalAlignment="Left" Click="SaveSettings_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="{DynamicResource Tab_Accounts}" x:Name="AccountsTab">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Header="{DynamicResource Accounts_CreateAccount}" Grid.Row="0" Grid.Column="0" Margin="5" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Accounts_Username}"/>
+                                <TextBox Name="CreateUserUsernameTextBox" Margin="0,0,0,5"/>
+                                <TextBlock Text="{DynamicResource Accounts_Password}"/>
+                                <PasswordBox Name="CreateUserPasswordBox" Margin="0,0,0,5"/>
+                                <TextBlock Text="{DynamicResource Accounts_Email}"/>
+                                <TextBox Name="CreateUserEmailTextBox" Margin="0,0,0,10" Text="not_needed@example.com"/>
+                                <Button Content="{DynamicResource Accounts_CreateAccount_Button}" x:Name="CreateAccountButton" Click="CreateAccountButton_Click"/>
+                                <TextBlock Name="CreateUserStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="{DynamicResource Accounts_ChangePassword}" Grid.Row="1" Grid.Column="0" Margin="5" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Accounts_Username}"/>
+                                <TextBox Name="ChangePassUsernameTextBox" Margin="0,0,0,5"/>
+                                <TextBlock Text="{DynamicResource Accounts_OldPassword}"/>
+                                <PasswordBox Name="ChangePassOldPasswordBox" Margin="0,0,0,5"/>
+                                <TextBlock Text="{DynamicResource Accounts_NewPassword}"/>
+                                <PasswordBox Name="ChangePassNewPasswordBox" Margin="0,0,0,10"/>
+                                <Button Content="{DynamicResource Accounts_ChangePassword_Button}" x:Name="ChangePasswordButton" Click="ChangePasswordButton_Click"/>
+                                <TextBlock Name="ChangePassStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="{DynamicResource Accounts_AddCubi}" Grid.Row="0" Grid.Column="1" Margin="5" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Accounts_Identifier}"/>
+                                <TextBox Name="AddCubiIdentifierTextBox" Margin="0,0,0,5"/>
+                                <TextBlock Text="{DynamicResource Accounts_IdentifierType}"/>
+                                <ComboBox Name="AddCubiIdentifierTypeComboBox" Margin="0,0,0,5">
+                                    <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
+                                    <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
+                                </ComboBox>
+                                <TextBlock Text="{DynamicResource Accounts_Amount}"/>
+                                <TextBox Name="AddCubiAmountTextBox" Margin="0,0,0,10" PreviewTextInput="NumericTextBox_PreviewTextInput"/>
+                                <Button Content="{DynamicResource Accounts_AddCubi_Button}" x:Name="AddCubiButton" Click="AddCubiButton_Click"/>
+                                <TextBlock Name="AddCubiStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="{DynamicResource Accounts_SetGMStatus}" Grid.Row="1" Grid.Column="1" Margin="5" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Accounts_Identifier}"/>
+                                <TextBox Name="SetGmIdentifierTextBox" Margin="0,0,0,5"/>
+                                <TextBlock Text="{DynamicResource Accounts_IdentifierType}"/>
+                                <ComboBox Name="SetGmIdentifierTypeComboBox" Margin="0,0,0,5">
+                                    <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
+                                    <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
+                                </ComboBox>
+                                <TextBlock Text="{DynamicResource Accounts_Action}"/>
+                                <ComboBox Name="SetGmActionComboBox" Margin="0,0,0,10">
+                                    <ComboBoxItem Content="{DynamicResource Accounts_GrantGM}" IsSelected="True"/>
+                                    <ComboBoxItem Content="{DynamicResource Accounts_RevokeGM}"/>
+                                </ComboBox>
+                                <Button Content="{DynamicResource Accounts_SetGMStatus_Button}" x:Name="SetGmStatusButton" Click="SetGmStatusButton_Click"/>
+                                <TextBlock Name="SetGmStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="{DynamicResource Accounts_DeleteAccount}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" Padding="10">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{DynamicResource Accounts_Identifier}" VerticalAlignment="Center"/>
+                                    <TextBox Name="DeleteUserIdentifierTextBox" Margin="5,0,0,0" Width="150" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Accounts_Type}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                    <ComboBox Name="DeleteUserIdentifierTypeComboBox" Margin="5,0,0,0" Width="100" VerticalAlignment="Center">
+                                        <ComboBoxItem Content="{DynamicResource Accounts_Username_Identifier}" IsSelected="True"/>
+                                        <ComboBoxItem Content="{DynamicResource Accounts_UserID_Identifier}"/>
+                                    </ComboBox>
+                                    <Button Content="{DynamicResource Accounts_DeleteAccount_Button}" x:Name="DeleteUserButton" Click="DeleteUserButton_Click" Margin="10,0,0,0" Background="Salmon" Foreground="White"/>
+                                </StackPanel>
+                                <TextBlock Name="DeleteUserStatusTextBlock" Margin="0,5,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <DockPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="5,10,5,5">
+                            <TextBlock Text="{DynamicResource Accounts_BrowseAccounts}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="0,0,0,5"/>
+                            <Button DockPanel.Dock="Right" Content="{DynamicResource Accounts_RefreshList}" x:Name="BrowseAccountsRefreshButton" HorizontalAlignment="Right" Margin="0,0,5,0" VerticalAlignment="Top" Click="BrowseAccountsRefreshButton_Click" Height="25"/>
+                        </DockPanel>
+                        <ListView Name="BrowseAccountsListView" Grid.Row="4" Grid.ColumnSpan="2" Margin="5" MaxHeight="300">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="{DynamicResource Accounts_Col_ID}" DisplayMemberBinding="{Binding Id}" Width="60"/>
+                                    <GridViewColumn Header="{DynamicResource Accounts_Col_Name}" DisplayMemberBinding="{Binding Name}" Width="150"/>
+                                    <GridViewColumn Header="{DynamicResource Accounts_Col_Email}" DisplayMemberBinding="{Binding Email}" Width="200"/>
+                                    <GridViewColumn Header="{DynamicResource Accounts_Col_Created}" DisplayMemberBinding="{Binding CreateTime, StringFormat='yyyy-MM-dd HH:mm'}" Width="150"/>
+                                    <GridViewColumn Header="{DynamicResource Accounts_Col_GM}" Width="50">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsGm}" IsEnabled="False" HorizontalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="{DynamicResource Tab_MapManagement}" x:Name="MapManagementTab">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+                        <Button Content="{DynamicResource Maps_AddNewMap}" x:Name="AddNewMapButton" Click="AddNewMapButton_Click" Margin="0,0,5,0" Padding="5"/>
+                        <Button Content="{DynamicResource Maps_DeleteSelectedMap}" x:Name="DeleteMapButton" Click="DeleteMapButton_Click" Margin="0,0,5,0" Padding="5"/>
+                        <Button Content="{DynamicResource Maps_SaveMapConfigs}" x:Name="SaveMapConfigurationsButton" Click="SaveMapConfigurationsButton_Click" Margin="0,0,10,0" Padding="5"/>
+                        <Button Content="{DynamicResource Maps_ReloadAndRefresh}" x:Name="ReloadMapsListButton" Click="ReloadMapsListButton_Click" Padding="5"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1" x:Name="MapsDataGrid" ItemsSource="{Binding DisplayableMaps}" AutoGenerateColumns="False" 
+                              CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single"
+                              HeadersVisibility="Column" GridLinesVisibility="Horizontal" BorderBrush="LightGray" BorderThickness="1">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn Header="{DynamicResource Maps_Col_AutoStart}" Binding="{Binding IsEnabledForAutoStart, Mode=TwoWay}" Width="100"/>
+                            <DataGridTextColumn Header="{DynamicResource Maps_Col_MapID}" Binding="{Binding MapId, Mode=TwoWay}" Width="SizeToCells" MinWidth="100"/>
+                            <DataGridTextColumn Header="{DynamicResource Maps_Col_MapName}" Binding="{Binding MapName, Mode=TwoWay}" Width="*" MinWidth="150"/>
+                            <DataGridTemplateColumn Header="{DynamicResource Maps_Col_CurrentStatus}" Width="SizeToCells" MinWidth="100" IsReadOnly="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding IsCurrentlyRunning, Converter={StaticResource BooleanToRunningStatusConverter}}" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{DynamicResource Maps_Col_Actions}" Width="120" MinWidth="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="{DynamicResource Maps_Start}" CommandParameter="{Binding}" Click="StartIndividualMapButton_Click" 
+                                                    IsEnabled="{Binding IsCurrentlyRunning, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,5,0" Padding="3"/>
+                                            <Button Content="{DynamicResource Maps_Stop}" CommandParameter="{Binding}" Click="StopIndividualMapButton_Click" 
+                                                    IsEnabled="{Binding IsCurrentlyRunning}" Padding="3"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="{DynamicResource Tab_CharacterEditor}" x:Name="CharacterEditorTab">
+                <local:CharacterEditorView x:Name="CharacterEditorViewControl"/>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>

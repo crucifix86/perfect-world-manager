@@ -1,0 +1,132 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="MainWindow_Title">Perfect World Manager</system:String>
+    <system:String x:Key="Tab_Dashboard">Dashboard</system:String>
+    <system:String x:Key="Tab_Settings">Settings</system:String>
+    <system:String x:Key="Tab_Accounts">Accounts</system:String>
+    <system:String x:Key="Tab_MapManagement">Map Management</system:String>
+    <system:String x:Key="Tab_CharacterEditor">Character Editor</system:String> <system:String x:Key="Dashboard_ConnectDaemon">Connect to Daemon</system:String>
+    <system:String x:Key="Dashboard_RefreshStatus">Refresh Status</system:String>
+    <system:String x:Key="Dashboard_StartAllServices">Start All Services</system:String>
+    <system:String x:Key="Dashboard_StopAllServices">Stop All Services</system:String>
+    <system:String x:Key="Dashboard_ProcessName">Service Name</system:String>
+    <system:String x:Key="Dashboard_Status">Status</system:String>
+    <system:String x:Key="Dashboard_Details">Details</system:String>
+    <system:String x:Key="Dashboard_Actions">Actions</system:String>
+    <system:String x:Key="Dashboard_Start">Start</system:String>
+    <system:String x:Key="Dashboard_Stop">Stop</system:String>
+    <system:String x:Key="Text_Ready">Ready</system:String>
+
+    <system:String x:Key="Settings_DaemonServiceSettings">Daemon Service Settings</system:String>
+    <system:String x:Key="Settings_DaemonServiceUrl">Daemon URL:</system:String>
+    <system:String x:Key="Settings_ApiKey">API Key:</system:String>
+    <system:String x:Key="Settings_GenerateApiKey">Generate</system:String>
+    <system:String x:Key="Settings_ApplicationSettings">Application Settings</system:String>
+    <system:String x:Key="Settings_Language">Language:</system:String>
+    <system:String x:Key="Settings_ServerPathSettings">Server Path Settings (Client Reference / Daemon Parameters)</system:String>
+    <system:String x:Key="Settings_ServerPathSettings_Desc">These paths are used by the client for context or as parameters to the daemon. The daemon itself should have its own primary configuration for these paths on the server.</system:String>
+    <system:String x:Key="Settings_ServerBaseDir">Server Base Dir (Context):</system:String>
+    <system:String x:Key="Settings_MapsFilePath">Maps File Path (Client):</system:String>
+    <system:String x:Key="Settings_LogsDir">Logs Dir (Daemon Context):</system:String>
+    <system:String x:Key="Settings_PwAdminDir">PWAdmin Dir (Daemon Context):</system:String>
+    <system:String x:Key="Settings_PwAdminUrl">PWAdmin URL (Client):</system:String>
+    <system:String x:Key="Settings_BackupStorageDir">Backup Storage Dir (Client):</system:String>
+    <system:String x:Key="Settings_CharEditorPaths">Character Editor Resource Paths (Client-Side)</system:String>
+    <system:String x:Key="Settings_ItemTxtPath">Item.txt Path:</system:String>
+    <system:String x:Key="Settings_ItemIconsPath">Item Icons Path:</system:String>
+    <system:String x:Key="Settings_MySQLSettings">MySQL Settings</system:String>
+    <system:String x:Key="Settings_MySQLHost">MySQL Host:</system:String>
+    <system:String x:Key="Settings_MySQLPort">MySQL Port:</system:String>
+    <system:String x:Key="Settings_MySQLUser">MySQL User:</system:String>
+    <system:String x:Key="Settings_MySQLPassword">MySQL Password:</system:String>
+    <system:String x:Key="Settings_MySQLDatabase">MySQL Database:</system:String>
+    <system:String x:Key="Settings_ProcessConfigs">Process Configurations (Used by Daemon)</system:String>
+    <system:String x:Key="Settings_ProcessConfigs_Desc">Edit individual process configurations below. These details will be passed to the daemon for execution...</system:String>
+    <system:String x:Key="Settings_Col_Type">Type</system:String>
+    <system:String x:Key="Settings_Col_DisplayName">Display Name</system:String>
+    <system:String x:Key="Settings_Col_Enabled">Enabled</system:String>
+    <system:String x:Key="Settings_Col_ExecDir">Exec Dir (Rel.)</system:String>
+    <system:String x:Key="Settings_Col_ExecutableName">Executable Name</system:String>
+    <system:String x:Key="Settings_Col_StartArgs">Start Arguments</system:String>
+    <system:String x:Key="Settings_Col_StatusPattern">Status Pattern</system:String>
+    <system:String x:Key="Settings_Col_MapID">Map ID (if gs)</system:String>
+    <system:String x:Key="Settings_SaveButton">Save Settings</system:String>
+
+    <system:String x:Key="Accounts_CreateAccount">Create Account</system:String>
+    <system:String x:Key="Accounts_Username">Username (4-10 chars):</system:String>
+    <system:String x:Key="Accounts_Password">Password (4-10 chars):</system:String>
+    <system:String x:Key="Accounts_Email">Email:</system:String>
+    <system:String x:Key="Accounts_CreateAccount_Button">Create Account</system:String>
+    <system:String x:Key="Accounts_ChangePassword">Change Password</system:String>
+    <system:String x:Key="Accounts_OldPassword">Old Password:</system:String>
+    <system:String x:Key="Accounts_NewPassword">New Password (4-10 chars):</system:String>
+    <system:String x:Key="Accounts_ChangePassword_Button">Change Password</system:String>
+    <system:String x:Key="Accounts_AddCubi">Add Cubi</system:String>
+    <system:String x:Key="Accounts_Identifier">Identifier (Username or ID):</system:String>
+    <system:String x:Key="Accounts_IdentifierType">Identifier Type:</system:String>
+    <system:String x:Key="Accounts_Username_Identifier">Username</system:String>
+    <system:String x:Key="Accounts_UserID_Identifier">User ID</system:String>
+    <system:String x:Key="Accounts_Amount">Amount (1-999999):</system:String>
+    <system:String x:Key="Accounts_AddCubi_Button">Add Cubi</system:String>
+    <system:String x:Key="Accounts_SetGMStatus">Set GM Status</system:String>
+    <system:String x:Key="Accounts_Action">Action:</system:String>
+    <system:String x:Key="Accounts_GrantGM">Grant GM Access</system:String>
+    <system:String x:Key="Accounts_RevokeGM">Revoke GM Access</system:String>
+    <system:String x:Key="Accounts_SetGMStatus_Button">Set GM Status</system:String>
+    <system:String x:Key="Accounts_DeleteAccount">Delete Account</system:String>
+    <system:String x:Key="Accounts_Type">Type:</system:String>
+    <system:String x:Key="Accounts_DeleteAccount_Button">Delete Account</system:String>
+    <system:String x:Key="Accounts_BrowseAccounts">Browse Accounts</system:String>
+    <system:String x:Key="Accounts_RefreshList">Refresh List</system:String>
+    <system:String x:Key="Accounts_Col_ID">ID</system:String>
+    <system:String x:Key="Accounts_Col_Name">Name</system:String>
+    <system:String x:Key="Accounts_Col_Email">Email</system:String>
+    <system:String x:Key="Accounts_Col_Created">Created</system:String>
+    <system:String x:Key="Accounts_Col_GM">GM</system:String>
+
+    <system:String x:Key="Maps_AddNewMap">Add New Map</system:String>
+    <system:String x:Key="Maps_DeleteSelectedMap">Delete Selected Map</system:String>
+    <system:String x:Key="Maps_SaveMapConfigs">Save Map Configurations</system:String>
+    <system:String x:Key="Maps_ReloadAndRefresh">Reload List &amp; Refresh Statuses</system:String>
+    <system:String x:Key="Maps_Col_AutoStart">Auto-Start</system:String>
+    <system:String x:Key="Maps_Col_MapID">Map ID</system:String>
+    <system:String x:Key="Maps_Col_MapName">Map Name</system:String>
+    <system:String x:Key="Maps_Col_CurrentStatus">Current Status</system:String>
+    <system:String x:Key="Maps_Col_Actions">Actions</system:String>
+    <system:String x:Key="Maps_Start">Start</system:String>
+    <system:String x:Key="Maps_Stop">Stop</system:String>
+    
+    <system:String x:Key="CharacterEditor_CharacterIDLabel">Character ID:</system:String>
+    <system:String x:Key="CharacterEditor_LoadCharacterButton">Load Character</system:String>
+    <system:String x:Key="CharacterEditor_RefreshCharacterButton">Refresh Character</system:String>
+    <system:String x:Key="CharacterEditor_SaveCharacterButton">Save Character</system:String>
+    <system:String x:Key="CharacterEditor_SyncGuiToXmlButton">Sync GUI to XML</system:String>
+    <system:String x:Key="CharacterEditor_SyncXmlToGuiButton">Sync XML to GUI</system:String>
+    
+    <system:String x:Key="CharacterEditor_TabGuiEditor">GUI Editor</system:String>
+    <system:String x:Key="CharacterEditor_TabBaseInfo">Base Info</system:String>
+    <system:String x:Key="CharacterEditor_TabStatusInfo">Status</system:String>
+    <system:String x:Key="CharacterEditor_TabInventoryAndSafe">Inventory &amp; Safe</system:String>
+    <system:String x:Key="CharacterEditor_EquipmentLabel">Equipment</system:String>
+    <system:String x:Key="CharacterEditor_PocketMoneyLabel">Pocket Money:</system:String>
+    <system:String x:Key="CharacterEditor_PocketItemsLabel">Pocket Items</system:String>
+    <system:String x:Key="CharacterEditor_StorehouseMoneyLabel">Storehouse Money:</system:String>
+    <system:String x:Key="CharacterEditor_StorehouseItemsLabel">Storehouse Items</system:String>
+    <system:String x:Key="CharacterEditor_DetailsForItemLabelPart">Details for: </system:String> 
+    <system:String x:Key="CharacterEditor_TabTaskInfo">Task Info</system:String>
+    
+    <system:String x:Key="CharacterEditor_TabRawXmlEditor">Raw XML Editor</system:String>
+    <system:String x:Key="CharacterEditor_TabPlayerCharacters">Player Characters</system:String>
+    <system:String x:Key="CharacterEditor_PlayerUserIDLabel">Player User ID:</system:String>
+    <system:String x:Key="CharacterEditor_SearchCharactersButton">Search Characters</system:String>
+    
+    <system:String x:Key="CharacterEditor_ColCharID">Character ID (Role ID)</system:String>
+    <system:String x:Key="CharacterEditor_ColCharName">Character Name</system:String>
+    
+    <system:String x:Key="CharacterEditor_LoadingText">Loading...</system:String>
+
+    <system:String x:Key="Status_LanguageChangedRestart">Language changed. Restart may be required for full effect.</system:String>
+
+</ResourceDictionary>

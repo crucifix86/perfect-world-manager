@@ -1,0 +1,112 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="MainWindow_Title">Manajer Perfect World</system:String>
+    <system:String x:Key="Tab_Dashboard">Dasbor</system:String>
+    <system:String x:Key="Tab_Settings">Pengaturan</system:String>
+    <system:String x:Key="Tab_Accounts">Akun</system:String>
+    <system:String x:Key="Tab_MapManagement">Manajemen Peta</system:String>
+    <system:String x:Key="Tab_CharacterEditor">Editor Karakter</system:String> <system:String x:Key="Dashboard_ConnectDaemon">Hubungkan ke Daemon</system:String>
+    <system:String x:Key="Dashboard_RefreshStatus">Segarkan Status</system:String>
+    <system:String x:Key="Dashboard_StartAllServices">Mulai Semua Layanan</system:String>
+    <system:String x:Key="Dashboard_StopAllServices">Hentikan Semua Layanan</system:String>
+    <system:String x:Key="Dashboard_ProcessName">Nama Layanan</system:String>
+    <system:String x:Key="Dashboard_Status">Status</system:String>
+    <system:String x:Key="Dashboard_Details">Detail</system:String>
+    <system:String x:Key="Dashboard_Actions">Tindakan</system:String>
+    <system:String x:Key="Dashboard_Start">Mulai</system:String>
+    <system:String x:Key="Dashboard_Stop">Hentikan</system:String>
+    <system:String x:Key="Text_Ready">Siap</system:String>
+
+    <system:String x:Key="Settings_DaemonServiceSettings">Pengaturan Layanan Daemon</system:String>
+    <system:String x:Key="Settings_DaemonServiceUrl">URL Daemon:</system:String>
+    <system:String x:Key="Settings_ApiKey">Kunci API:</system:String>
+    <system:String x:Key="Settings_GenerateApiKey">Buat</system:String>
+    <system:String x:Key="Settings_ApplicationSettings">Pengaturan Aplikasi</system:String>
+    <system:String x:Key="Settings_Language">Bahasa:</system:String>
+    <system:String x:Key="Settings_ServerPathSettings">Pengaturan Jalur Server (Referensi Klien / Parameter Daemon)</system:String>
+    <system:String x:Key="Settings_ServerPathSettings_Desc">Jalur ini digunakan oleh klien untuk konteks atau sebagai parameter untuk daemon. Daemon itu sendiri harus memiliki konfigurasi utama sendiri untuk jalur ini di server.</system:String>
+    <system:String x:Key="Settings_ServerBaseDir">Direktori Dasar Server (Konteks):</system:String>
+    <system:String x:Key="Settings_MapsFilePath">Jalur Berkas Peta (Klien):</system:String>
+    <system:String x:Key="Settings_LogsDir">Direktori Log (Konteks Daemon):</system:String>
+    <system:String x:Key="Settings_PwAdminDir">Direktori PWAdmin (Konteks Daemon):</system:String>
+    <system:String x:Key="Settings_PwAdminUrl">URL PWAdmin (Klien):</system:String>
+    <system:String x:Key="Settings_BackupStorageDir">Direktori Penyimpanan Cadangan (Klien):</system:String>
+    <system:String x:Key="Settings_CharEditorPaths">Jalur Sumber Daya Editor Karakter (Sisi Klien)</system:String>
+    <system:String x:Key="Settings_ItemTxtPath">Jalur Item.txt:</system:String>
+    <system:String x:Key="Settings_ItemIconsPath">Jalur Ikon Item:</system:String>
+    <system:String x:Key="Settings_MySQLSettings">Pengaturan MySQL</system:String>
+    <system:String x:Key="Settings_MySQLHost">Host MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLPort">Port MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLUser">Pengguna MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLPassword">Kata Sandi MySQL:</system:String>
+    <system:String x:Key="Settings_MySQLDatabase">Database MySQL:</system:String>
+    <system:String x:Key="Settings_ProcessConfigs">Konfigurasi Proses (Digunakan oleh Daemon)</system:String>
+    <system:String x:Key="Settings_ProcessConfigs_Desc">Edit konfigurasi proses individual di bawah ini. Detail ini akan diteruskan ke daemon untuk dieksekusi...</system:String>
+    <system:String x:Key="Settings_Col_Type">Tipe</system:String>
+    <system:String x:Key="Settings_Col_DisplayName">Nama Tampilan</system:String>
+    <system:String x:Key="Settings_Col_Enabled">Diaktifkan</system:String>
+    <system:String x:Key="Settings_Col_ExecDir">Direktori Eksekusi (Relatif)</system:String>
+    <system:String x:Key="Settings_Col_ExecutableName">Nama Eksekutabel</system:String>
+    <system:String x:Key="Settings_Col_StartArgs">Argumen Mulai</system:String>
+    <system:String x:Key="Settings_Col_StatusPattern">Pola Status</system:String>
+    <system:String x:Key="Settings_Col_MapID">ID Peta (jika gs)</system:String>
+    <system:String x:Key="Settings_SaveButton">Simpan Pengaturan</system:String>
+
+    <system:String x:Key="Accounts_CreateAccount">Buat Akun</system:String>
+    <system:String x:Key="Accounts_Username">Nama Pengguna (4-10 karakter):</system:String>
+    <system:String x:Key="Accounts_Password">Kata Sandi (4-10 karakter):</system:String>
+    <system:String x:Key="Accounts_Email">Email:</system:String>
+    <system:String x:Key="Accounts_CreateAccount_Button">Buat Akun</system:String>
+    <system:String x:Key="Accounts_ChangePassword">Ubah Kata Sandi</system:String>
+    <system:String x:Key="Accounts_OldPassword">Kata Sandi Lama:</system:String>
+    <system:String x:Key="Accounts_NewPassword">Kata Sandi Baru (4-10 karakter):</system:String>
+    <system:String x:Key="Accounts_ChangePassword_Button">Ubah Kata Sandi</system:String>
+    <system:String x:Key="Accounts_AddCubi">Tambah Cubi</system:String>
+    <system:String x:Key="Accounts_Identifier">Pengidentifikasi (Nama Pengguna atau ID):</system:String>
+    <system:String x:Key="Accounts_IdentifierType">Tipe Pengidentifikasi:</system:String>
+    <system:String x:Key="Accounts_Username_Identifier">Nama Pengguna</system:String>
+    <system:String x:Key="Accounts_UserID_Identifier">ID Pengguna</system:String>
+    <system:String x:Key="Accounts_Amount">Jumlah (1-999999):</system:String>
+    <system:String x:Key="Accounts_AddCubi_Button">Tambah Cubi</system:String>
+    <system:String x:Key="Accounts_SetGMStatus">Atur Status GM</system:String>
+    <system:String x:Key="Accounts_Action">Tindakan:</system:String>
+    <system:String x:Key="Accounts_GrantGM">Berikan Akses GM</system:String>
+    <system:String x:Key="Accounts_RevokeGM">Cabut Akses GM</system:String>
+    <system:String x:Key="Accounts_SetGMStatus_Button">Atur Status GM</system:String>
+    <system:String x:Key="Accounts_DeleteAccount">Hapus Akun</system:String>
+    <system:String x:Key="Accounts_Type">Tipe:</system:String>
+    <system:String x:Key="Accounts_DeleteAccount_Button">Hapus Akun</system:String>
+    <system:String x:Key="Accounts_BrowseAccounts">Jelajahi Akun</system:String>
+    <system:String x:Key="Accounts_RefreshList">Segarkan Daftar</system:String>
+    <system:String x:Key="Accounts_Col_ID">ID</system:String>
+    <system:String x:Key="Accounts_Col_Name">Nama</system:String>
+    <system:String x:Key="Accounts_Col_Email">Email</system:String>
+    <system:String x:Key="Accounts_Col_Created">Dibuat</system:String>
+    <system:String x:Key="Accounts_Col_GM">GM</system:String>
+
+    <system:String x:Key="Maps_AddNewMap">Tambah Peta Baru</system:String>
+    <system:String x:Key="Maps_DeleteSelectedMap">Hapus Peta Terpilih</system:String>
+    <system:String x:Key="Maps_SaveMapConfigs">Simpan Konfigurasi Peta</system:String>
+    <system:String x:Key="Maps_ReloadAndRefresh">Muat Ulang Daftar &amp; Segarkan Status</system:String>
+    <system:String x:Key="Maps_Col_AutoStart">Mulai-Otomatis</system:String>
+    <system:String x:Key="Maps_Col_MapID">ID Peta</system:String>
+    <system:String x:Key="Maps_Col_MapName">Nama Peta</system:String>
+    <system:String x:Key="Maps_Col_CurrentStatus">Status Saat Ini</system:String>
+    <system:String x:Key="Maps_Col_Actions">Tindakan</system:String>
+    <system:String x:Key="Maps_Start">Mulai</system:String>
+    <system:String x:Key="Maps_Stop">Hentikan</system:String>
+    
+    <system:String x:Key="CharacterEditor_CharacterIDLabel">ID Karakter:</system:String>
+    <system:String x:Key="CharacterEditor_LoadCharacterButton">Muat Karakter</system:String>
+    <system:String x:Key="CharacterEditor_RefreshCharacterButton">Segarkan Karakter</system:String>
+    <system:String x:Key="CharacterEditor_SaveCharacterButton">Simpan Karakter</system:String>
+    <system:String x:Key="CharacterEditor_SyncGuiToXmlButton">Sinkronkan GUI ke XML</system:String>
+    <system:String x:Key="CharacterEditor_SyncXmlToGuiButton">Sinkronkan XML ke GUI</system:String>
+    
+    <system:String x:Key="CharacterEditor_TabGuiEditor">Editor GUI</system:String>
+    <system:String x:Key="CharacterEditor_TabBaseInfo">Info Dasar</system:String>
+    <system:String x:Key="CharacterEditor_TabStatusInfo">Status</system:String> <system:String x:Key="CharacterEditor_TabInventoryAndSafe">Inventaris &amp; Brankas</system:String> <system:String x:Key="CharacterEditor_EquipmentLabel">Peralatan</system:String> <system:String x:Key="CharacterEditor_PocketMoneyLabel">Uang Saku:</system:String> <system:String x:Key="CharacterEditor_PocketItemsLabel">Item Saku</system:String> <system:String x:Key="CharacterEditor_StorehouseMoneyLabel">Uang Gudang:</system:String> <system:String x:Key="CharacterEditor_StorehouseItemsLabel">Item Gudang</system:String> <system:String x:Key="CharacterEditor_DetailsForItemLabelPart">Detail untuk: </system:String> <system:String x:Key="CharacterEditor_TabTaskInfo">Info Tugas</system:String> <system:String x:Key="CharacterEditor_TabRawXmlEditor">Editor XML Mentah</system:String> <system:String x:Key="CharacterEditor_TabPlayerCharacters">Karakter Pemain</system:String> <system:String x:Key="CharacterEditor_PlayerUserIDLabel">ID Pengguna Pemain:</system:String> <system:String x:Key="CharacterEditor_SearchCharactersButton">Cari Karakter</system:String> <system:String x:Key="CharacterEditor_ColCharID">ID Karakter (ID Peran)</system:String> <system:String x:Key="CharacterEditor_ColCharName">Nama Karakter</system:String> <system:String x:Key="CharacterEditor_LoadingText">Memuat...</system:String> <system:String x:Key="Status_LanguageChangedRestart">Bahasa diubah. Mungkin perlu memulai ulang untuk efek penuh.</system:String>
+
+</ResourceDictionary>

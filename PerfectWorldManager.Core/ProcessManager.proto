@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+// Option to set the C# namespace for generated code
+option csharp_namespace = "PerfectWorldManager.Grpc";
+
+package ProcessManager;
+
+// The service definition.
+service Manager {
+  // Starts a process
+  rpc StartProcess (StartProcessRequest) returns (ProcessResponse);
+  // Stops a process
+  rpc StopProcess (StopProcessRequest) returns (ProcessResponse);
+  // Gets the status of a process
+  rpc GetProcessStatus (ProcessStatusRequest) returns (ProcessStatusResponse);
+
+  // Starts a map
+  rpc StartMap (StartMapRequest) returns (ProcessResponse);
+  // Stops a map
+  rpc StopMap (StopMapRequest) returns (ProcessResponse);
+  // Gets the status of a map
+  rpc GetMapStatus (MapStatusRequest) returns (MapStatusResponse);
+
+  // Executes a generic command/script (careful with security)
+  rpc ExecuteCommand (ExecuteCommandRequest) returns (ExecuteCommandResponse);
+}
+
+// ----- Process Management Messages -----
+message StartProcessRequest {
+  string process_key = 1; // A unique key or name for the process config
+  string executable_name = 2;
+  string arguments = 3;
+  string working_directory = 4;
+  string log_file_name_base = 5; // e.g., "gamed_gs01"
+  // Add other relevant fields from your ProcessConfiguration if needed
+}
+
+message StopProcessRequest {
+  string process_key = 1; // A unique key or name for the process config
+  string status_check_pattern = 2; // e.g., pattern for pkill or pgrep
+}
+
+message ProcessStatusRequest {
+  string process_key = 1;
+  string status_check_pattern = 2;
+}
+
+message ProcessResponse {
+  bool success = 1;
+  string message = 2;
+  int32 process_id = 3; // Optional: PID if started
+}
+
+message ProcessStatusResponse {
+  enum Status {
+    UNKNOWN = 0;
+    STOPPED = 1;
+    RUNNING = 2;
+    ERROR = 3;
+  }
+  Status status = 1;
+  string details = 2; // e.g., PID(s) or error message
+}
+
+// ----- Map Management Messages -----
+message StartMapRequest {
+  string map_id = 1;
+  // Consider if you need to pass ProcessConfiguration details for 'gs'
+  // or if the daemon can look them up based on map_id or a general 'gs' config.
+  // For simplicity, assuming daemon knows how to start 'gs' with a map_id.
+  // You might need fields similar to StartProcessRequest if maps are generic processes.
+  bool is_main_world_server_with_map_list = 2;
+  repeated string additional_map_ids = 3; // For gs01 with sub-maps
+}
+
+message StopMapRequest {
+  string map_id = 1;
+}
+
+message MapStatusRequest {
+  string map_id = 1;
+}
+
+message MapStatusResponse {
+  bool is_running = 1;
+  string details = 2;
+}
+
+// ----- Generic Command Execution -----
+message ExecuteCommandRequest {
+  string command = 1; // e.g., "chmod +x script.sh" or "./script.sh"
+  string working_directory = 2;
+}
+
+message ExecuteCommandResponse {
+  bool success = 1;
+  string output = 2;
+  string error_output = 3;
+  int32 exit_code = 4;
+}
