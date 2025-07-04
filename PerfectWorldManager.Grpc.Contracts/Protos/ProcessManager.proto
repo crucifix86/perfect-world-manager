@@ -30,6 +30,9 @@ service Manager {
 
   // NEW RPC for getting player characters
   rpc GetPlayerCharacters (GetPlayerCharactersRequest) returns (GetPlayerCharactersResponse);
+  
+  // RPC for getting characters by ID range
+  rpc GetCharacterRange (GetCharacterRangeRequest) returns (GetCharacterRangeResponse);
 
   // ----- Account Management RPCs -----
   rpc CreateAccount (CreateAccountRequest) returns (AccountActionResponse);
@@ -206,6 +209,25 @@ message GetPlayerCharactersRequest {
 
 message GetPlayerCharactersResponse {
   repeated PlayerCharacterItem characters = 1;
+  bool success = 2;
+  string message = 3;
+}
+
+// ----- New Messages for GetCharacterRange -----
+message GetCharacterRangeRequest {
+  int32 start_id = 1;
+  int32 end_id = 2;
+}
+
+message CharacterRangeItem {
+  int32 role_id = 1;
+  string role_name = 2;
+  int32 level = 3;
+  int32 user_id = 4;
+}
+
+message GetCharacterRangeResponse {
+  repeated CharacterRangeItem characters = 1;
   bool success = 2;
   string message = 3;
 }
