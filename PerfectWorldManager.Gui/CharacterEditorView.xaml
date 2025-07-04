@@ -44,8 +44,8 @@
         <TabControl Grid.Row="1" Margin="5" Name="EditorModeTabControl" SelectionChanged="EditorModeTabControl_SelectionChanged">
                 <TabItem Header="{DynamicResource CharacterEditor_TabGuiEditor}" x:Name="GuiEditorTab">
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <Grid DataContext="{Binding CurrentCharacterVm}">
-                            <TabControl Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
+                        <Grid>
+                            <TabControl DataContext="{Binding CurrentCharacterVm}" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
                                 <TabItem Header="{DynamicResource CharacterEditor_TabBaseInfo}">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <ItemsControl ItemsSource="{Binding BaseInfo.Variables}">
