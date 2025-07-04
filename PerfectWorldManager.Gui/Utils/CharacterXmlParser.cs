@@ -63,7 +63,6 @@ namespace PerfectWorldManager.Gui.Utils
             {
                 // Check for both "items" and "inv" tags as different servers might use different formats
                 var itemNodes = sectionElement.Elements("items").Concat(sectionElement.Elements("inv")).ToList();
-                System.Diagnostics.Debug.WriteLine($"Found {itemNodes.Count} items in {sectionElement.Name}");
                 
                 foreach (XElement itemNode in itemNodes) // Each <items> or <inv> tag is an individual item
                 {
@@ -91,10 +90,7 @@ namespace PerfectWorldManager.Gui.Utils
             if (equipmentElement == null || equipmentVm == null) return;
 
             // Equipment items are direct <inv> children
-            var invElements = equipmentElement.Elements("inv").ToList();
-            System.Diagnostics.Debug.WriteLine($"Found {invElements.Count} equipment items");
-            
-            foreach (XElement invElement in invElements)
+            foreach (XElement invElement in equipmentElement.Elements("inv"))
             {
                 var invItemVm = new InventoryItemVm();
                 foreach (XElement varElement in invElement.Elements("variable"))
