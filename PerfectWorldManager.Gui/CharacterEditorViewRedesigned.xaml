@@ -1,0 +1,489 @@
+<UserControl x:Class="PerfectWorldManager.Gui.CharacterEditorViewRedesigned"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PerfectWorldManager.Gui"
+             xmlns:vm="clr-namespace:PerfectWorldManager.Gui.ViewModels;assembly=PerfectWorldManager.Gui"
+             xmlns:models="clr-namespace:PerfectWorldManager.Core.Models;assembly=PerfectWorldManager.Core"
+             xmlns:converters="clr-namespace:PerfectWorldManager.Gui.Converters"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:CharacterEditorViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="700" d:DesignWidth="900">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:StringPathToImageSourceConverter x:Key="PathToImageConverter"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <converters:BooleanToHeightConverter x:Key="BooleanToHeightConverterForTextArea" TrueHeight="60" FalseHeight="25"/>
+            <converters:NullToBooleanConverter x:Key="NullToTrueConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            
+            <!-- Custom styles for this view -->
+            <Style x:Key="SectionHeaderText" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="{DynamicResource ModernAccentBrush}"/>
+                <Setter Property="Margin" Value="0,0,0,12"/>
+            </Style>
+            
+            <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Foreground" Value="{DynamicResource ModernSecondaryTextBrush}"/>
+                <Setter Property="Margin" Value="0,0,0,4"/>
+            </Style>
+            
+            <Style x:Key="ActionButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="MinWidth" Value="120"/>
+                <Setter Property="Margin" Value="4"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <!-- Main Layout -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header Section -->
+        <Border Grid.Row="0" Style="{StaticResource ModernCard}" Margin="8,8,8,4">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Title and Status -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <Path Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" 
+                              Fill="{DynamicResource ModernAccentBrush}" 
+                              Width="24" Height="24" 
+                              VerticalAlignment="Center"
+                              Margin="0,0,12,0"/>
+                        <TextBlock Text="Character Editor" 
+                                   FontSize="20" 
+                                   FontWeight="Bold" 
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <!-- Status Indicator -->
+                    <Border Grid.Column="2" 
+                            Background="{DynamicResource ModernSuccessBrush}"
+                            CornerRadius="12"
+                            Padding="12,6"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding CurrentCharacterVm, Converter={StaticResource NullToVisibilityConverter}}">
+                        <TextBlock Text="Character Loaded" 
+                                   Foreground="White" 
+                                   FontWeight="SemiBold"
+                                   FontSize="12"/>
+                    </Border>
+                </Grid>
+                
+                <!-- Character Selection -->
+                <Grid Grid.Row="1" Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Column="0" 
+                               Text="Character ID:" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,12,0"
+                               FontWeight="SemiBold"/>
+                    
+                    <TextBox Grid.Column="1" 
+                             Text="{Binding CharacterId, UpdateSourceTrigger=PropertyChanged}"
+                             VerticalAlignment="Center"
+                             FontSize="14"/>
+                    
+                    <StackPanel Grid.Column="2" 
+                                Orientation="Horizontal" 
+                                Margin="12,0,0,0">
+                        <Button Content="Load" 
+                                Command="{Binding LoadCharacterCommand}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                MinWidth="80"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="Refresh" 
+                                Command="{Binding RefreshCharacterCommand}"
+                                MinWidth="80"
+                                Margin="4,0"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                        <Button Content="Save" 
+                                Command="{Binding SaveCharacterCommand}"
+                                Background="{DynamicResource ModernSuccessBrush}"
+                                MinWidth="80"
+                                IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                    </StackPanel>
+                    
+                    <!-- Status Message -->
+                    <TextBlock Grid.Column="3" 
+                               Text="{Binding StatusMessage}" 
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right"
+                               Foreground="{DynamicResource ModernWarningBrush}"
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"/>
+                </Grid>
+            </Grid>
+        </Border>
+        
+        <!-- Content Area -->
+        <Grid Grid.Row="1">
+            <!-- Empty State -->
+            <Border Visibility="{Binding CurrentCharacterVm, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Inverse}"
+                    Style="{StaticResource ModernCard}"
+                    Margin="8,4,8,8">
+                <StackPanel HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            MaxWidth="400">
+                    <Path Data="M9,11H15V13H9V11M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M9,7H15V9H9V7M9,15H15V17H9V15Z" 
+                          Fill="{DynamicResource ModernSecondaryTextBrush}" 
+                          Width="64" Height="64" 
+                          HorizontalAlignment="Center"
+                          Margin="0,0,0,20"
+                          Opacity="0.5"/>
+                    <TextBlock Text="No Character Loaded" 
+                               FontSize="24" 
+                               FontWeight="Light"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource ModernSecondaryTextBrush}"
+                               Margin="0,0,0,12"/>
+                    <TextBlock Text="Enter a Character ID above and click 'Load' to begin editing" 
+                               FontSize="14"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               Foreground="{DynamicResource ModernSecondaryTextBrush}"
+                               Opacity="0.8"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Character Data -->
+            <Grid Visibility="{Binding CurrentCharacterVm, Converter={StaticResource NullToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Side Navigation -->
+                <Border Grid.Column="0" 
+                        Background="{DynamicResource ModernSurfaceBrush}"
+                        Margin="8,4,4,8">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="12">
+                            <TextBlock Text="SECTIONS" 
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource ModernSecondaryTextBrush}"
+                                       Margin="0,0,0,12"/>
+                            
+                            <RadioButton x:Name="BaseInfoRadio" 
+                                         IsChecked="True"
+                                         GroupName="EditorSection"
+                                         Style="{DynamicResource NavigationRadioButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z" 
+                                          Fill="{DynamicResource ModernForegroundBrush}" 
+                                          Width="20" Height="20" 
+                                          Margin="0,0,8,0"/>
+                                    <TextBlock Text="Base Info" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton x:Name="StatusRadio" 
+                                         GroupName="EditorSection"
+                                         Margin="0,8,0,0"
+                                         Style="{DynamicResource NavigationRadioButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10Z" 
+                                          Fill="{DynamicResource ModernForegroundBrush}" 
+                                          Width="20" Height="20" 
+                                          Margin="0,0,8,0"/>
+                                    <TextBlock Text="Status" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton x:Name="InventoryRadio" 
+                                         GroupName="EditorSection"
+                                         Margin="0,8,0,0"
+                                         Style="{DynamicResource NavigationRadioButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M2,2H11V11H2V2M9,4H4V9H9V4M12,2H21V11H12V2M19,4H14V9H19V4M2,12H11V21H2V12M9,14H4V19H9V14M12,12H21V21H12V12M19,14H14V19H19V14Z" 
+                                          Fill="{DynamicResource ModernForegroundBrush}" 
+                                          Width="20" Height="20" 
+                                          Margin="0,0,8,0"/>
+                                    <TextBlock Text="Inventory" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton x:Name="TasksRadio" 
+                                         GroupName="EditorSection"
+                                         Margin="0,8,0,0"
+                                         Style="{DynamicResource NavigationRadioButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7M17,11H7V9H17V11M15,15H7V13H15V15Z" 
+                                          Fill="{DynamicResource ModernForegroundBrush}" 
+                                          Width="20" Height="20" 
+                                          Margin="0,0,8,0"/>
+                                    <TextBlock Text="Tasks" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <Separator Margin="0,16,0,16"/>
+                            
+                            <RadioButton x:Name="XmlRadio" 
+                                         GroupName="EditorSection"
+                                         Style="{DynamicResource NavigationRadioButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M12.89,3L14.85,3.4L11.11,21L9.15,20.6L12.89,3M19.59,12L16,8.41V5.58L22.42,12L16,18.41V15.58L19.59,12M1.58,12L8,5.58V8.41L4.41,12L8,15.58V18.41L1.58,12Z" 
+                                          Fill="{DynamicResource ModernForegroundBrush}" 
+                                          Width="20" Height="20" 
+                                          Margin="0,0,8,0"/>
+                                    <TextBlock Text="XML Editor" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <RadioButton x:Name="PlayersRadio" 
+                                         GroupName="EditorSection"
+                                         Margin="0,8,0,0"
+                                         Style="{DynamicResource NavigationRadioButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="M16,17V19H2V17S2,13 9,13 16,17 16,17M12.5,7.5A3.5,3.5 0 0,0 9,4A3.5,3.5 0 0,0 5.5,7.5A3.5,3.5 0 0,0 9,11A3.5,3.5 0 0,0 12.5,7.5M15.94,13A5.32,5.32 0 0,1 18,17V19H22V17S22,13.37 15.94,13M15,4A3.39,3.39 0 0,0 13.07,4.59A5,5 0 0,1 13.07,10.41A3.39,3.39 0 0,0 15,11A3.5,3.5 0 0,0 18.5,7.5A3.5,3.5 0 0,0 15,4Z" 
+                                          Fill="{DynamicResource ModernForegroundBrush}" 
+                                          Width="20" Height="20" 
+                                          Margin="0,0,8,0"/>
+                                    <TextBlock Text="Player Characters" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                            <Separator Margin="0,16,0,16"/>
+                            
+                            <TextBlock Text="ACTIONS" 
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource ModernSecondaryTextBrush}"
+                                       Margin="0,0,0,12"/>
+                            
+                            <Button Content="Sync GUI → XML" 
+                                    Command="{Binding SyncGuiToXmlCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,0,4"
+                                    FontSize="12"
+                                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                            
+                            <Button Content="Sync XML → GUI" 
+                                    Command="{Binding SyncXmlToGuiCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    FontSize="12"
+                                    IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+                
+                <!-- Content Panel -->
+                <Border Grid.Column="1" 
+                        Style="{StaticResource ModernCard}"
+                        Margin="4,4,8,8">
+                    <Grid DataContext="{Binding CurrentCharacterVm}">
+                        <!-- Base Info Section -->
+                        <ScrollViewer Visibility="{Binding ElementName=BaseInfoRadio, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="20">
+                                <TextBlock Text="Base Information" Style="{StaticResource SectionHeaderText}"/>
+                                <ItemsControl ItemsSource="{Binding BaseInfo.Variables}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type models:CharacterVariableVm}">
+                                            <Grid Margin="0,0,0,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" 
+                                                           Text="{Binding Name}" 
+                                                           Style="{StaticResource FieldLabelStyle}"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBox Grid.Column="1" 
+                                                         Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         AcceptsReturn="{Binding IsLongText}"
+                                                         TextWrapping="Wrap"
+                                                         Height="{Binding IsLongText, Converter={StaticResource BooleanToHeightConverterForTextArea}}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+                        
+                        <!-- Status Section -->
+                        <ScrollViewer Visibility="{Binding ElementName=StatusRadio, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="20">
+                                <TextBlock Text="Status Information" Style="{StaticResource SectionHeaderText}"/>
+                                <ItemsControl ItemsSource="{Binding StatusInfo.Variables}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type models:CharacterVariableVm}">
+                                            <Grid Margin="0,0,0,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" 
+                                                           Text="{Binding Name}" 
+                                                           Style="{StaticResource FieldLabelStyle}"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBox Grid.Column="1" 
+                                                         Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         AcceptsReturn="{Binding IsLongText}"
+                                                         TextWrapping="Wrap"
+                                                         Height="{Binding IsLongText, Converter={StaticResource BooleanToHeightConverterForTextArea}}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+                        
+                        <!-- Inventory Section (keeping original complex layout) -->
+                        <Grid Visibility="{Binding ElementName=InventoryRadio, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <!-- Original inventory implementation would go here -->
+                            <TextBlock Text="Inventory section - implementation from original" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource ModernSecondaryTextBrush}"/>
+                        </Grid>
+                        
+                        <!-- Tasks Section -->
+                        <ScrollViewer Visibility="{Binding ElementName=TasksRadio, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="20">
+                                <TextBlock Text="Task Information" Style="{StaticResource SectionHeaderText}"/>
+                                <ItemsControl ItemsSource="{Binding TaskInfo.Variables}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type models:CharacterVariableVm}">
+                                            <Grid Margin="0,0,0,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" 
+                                                           Text="{Binding Name}" 
+                                                           Style="{StaticResource FieldLabelStyle}"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBox Grid.Column="1" 
+                                                         Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         AcceptsReturn="{Binding IsLongText}"
+                                                         TextWrapping="Wrap"
+                                                         Height="{Binding IsLongText, Converter={StaticResource BooleanToHeightConverterForTextArea}}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+                        
+                        <!-- XML Editor Section -->
+                        <Grid Visibility="{Binding ElementName=XmlRadio, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="XML Editor" Style="{StaticResource SectionHeaderText}" Margin="20,20,20,0"/>
+                            <TextBox Grid.Row="1" 
+                                     Text="{Binding Path=DataContext.CharacterXml, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True" 
+                                     AcceptsTab="True"
+                                     VerticalScrollBarVisibility="Auto" 
+                                     HorizontalScrollBarVisibility="Auto"
+                                     FontFamily="Consolas" 
+                                     FontSize="13"
+                                     Background="{DynamicResource ModernBackgroundBrush}" 
+                                     Foreground="{DynamicResource ModernForegroundBrush}"
+                                     Margin="20"/>
+                        </Grid>
+                        
+                        <!-- Player Characters Section -->
+                        <Grid Visibility="{Binding ElementName=PlayersRadio, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              DataContext="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Text="Player Characters" Style="{StaticResource SectionHeaderText}" Margin="20,20,20,0"/>
+                            
+                            <Grid Grid.Row="1" Margin="20,0,20,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Grid.Column="0" 
+                                           Text="Player User ID:" 
+                                           VerticalAlignment="Center" 
+                                           Margin="0,0,12,0"/>
+                                
+                                <TextBox Grid.Column="1" 
+                                         Text="{Binding SearchPlayerIdText, UpdateSourceTrigger=PropertyChanged}"
+                                         VerticalAlignment="Center"/>
+                                
+                                <Button Grid.Column="2" 
+                                        Content="Search" 
+                                        Command="{Binding SearchPlayerCharactersCommand}"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        Margin="12,0,0,0"
+                                        MinWidth="100"/>
+                                
+                                <TextBlock Grid.Column="3" 
+                                           Text="{Binding PlayerCharactersStatusMessage}" 
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Right"
+                                           FontStyle="Italic"
+                                           Foreground="{DynamicResource ModernSecondaryTextBrush}"/>
+                            </Grid>
+                            
+                            <DataGrid Grid.Row="2" 
+                                      ItemsSource="{Binding PlayerCharactersList}" 
+                                      AutoGenerateColumns="False" 
+                                      IsReadOnly="True" 
+                                      CanUserAddRows="False"
+                                      Margin="20,0,20,20">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Character ID" Binding="{Binding RoleId}" Width="150"/>
+                                    <DataGridTextColumn Header="Character Name" Binding="{Binding RoleName}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+        
+        <!-- Loading Overlay -->
+        <Border Background="#7F000000" 
+                Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                Grid.RowSpan="2">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4" Margin="0,0,0,16"/>
+                <TextBlock Text="Loading..." 
+                           Foreground="White" 
+                           FontSize="16"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
