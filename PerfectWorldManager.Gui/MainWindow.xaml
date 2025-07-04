@@ -7,15 +7,51 @@
         xmlns:converters="clr-namespace:PerfectWorldManager.Gui.Converters"
         xmlns:core="clr-namespace:PerfectWorldManager.Core;assembly=PerfectWorldManager.Core"
         mc:Ignorable="d"
-        Title="{DynamicResource MainWindow_Title}" Height="700" Width="1000">
+        Title="{DynamicResource MainWindow_Title}" Height="700" Width="1000"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="CanResizeWithGrip">
     <Window.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:BooleanToRunningStatusConverter x:Key="BooleanToRunningStatusConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
-    <Grid>
-        <!-- Main Content -->
-        <TabControl x:Name="MainTabControl" SelectionChanged="MainTabControl_SelectionChanged">
+    <Border BorderBrush="{StaticResource ModernBorderBrush}" BorderThickness="1" Background="{StaticResource ModernBackgroundBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Custom Title Bar -->
+            <Grid Grid.Row="0" Background="{StaticResource ModernLighterBackgroundBrush}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- App Icon and Title -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0">
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Title}" 
+                               VerticalAlignment="Center" FontSize="14" Foreground="{StaticResource ModernForegroundBrush}"/>
+                </StackPanel>
+                
+                <!-- Window Control Buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button x:Name="MinimizeButton" Content="─" Width="46" Height="32" 
+                            Click="MinimizeButton_Click" 
+                            Style="{StaticResource WindowControlButtonStyle}"/>
+                    <Button x:Name="MaximizeButton" Content="☐" Width="46" Height="32" 
+                            Click="MaximizeButton_Click" 
+                            Style="{StaticResource WindowControlButtonStyle}"/>
+                    <Button x:Name="CloseButton" Content="✕" Width="46" Height="32" 
+                            Click="CloseButton_Click" 
+                            Style="{StaticResource WindowCloseButtonStyle}"/>
+                </StackPanel>
+            </Grid>
+            
+            <!-- Main Content -->
+            <TabControl Grid.Row="1" x:Name="MainTabControl" SelectionChanged="MainTabControl_SelectionChanged">
             <TabItem Header="{DynamicResource Tab_Dashboard}" x:Name="DashboardTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid>
@@ -497,8 +533,10 @@
         
         <!-- Notification Container -->
         <Grid x:Name="NotificationContainer" 
+              Grid.Row="1"
               IsHitTestVisible="False"
               VerticalAlignment="Top"
               HorizontalAlignment="Right"/>
-    </Grid>
+        </Grid>
+    </Border>
 </Window>
