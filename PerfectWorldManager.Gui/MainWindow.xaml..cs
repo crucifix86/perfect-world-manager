@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using PerfectWorldManager.Grpc;
 using PerfectWorldManager.Gui.ViewModels; // For CharacterEditorViewModel
 // Assuming CharacterEditorView.xaml.cs is in namespace PerfectWorldManager.Gui
