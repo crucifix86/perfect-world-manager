@@ -505,59 +505,165 @@
                 <!-- Player Characters Tab -->
                 <TabItem Header="{DynamicResource CharacterEditor_TabPlayerCharacters}" x:Name="PlayerCharactersTab" 
                          IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
-                    <Border Style="{StaticResource ModernCard}" Margin="8">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,16">
-                                <TextBlock Text="{DynamicResource CharacterEditor_PlayerUserIDLabel}" 
-                                           VerticalAlignment="Center" 
-                                           Margin="0,0,8,0"
-                                           FontWeight="SemiBold"/>
-                                <TextBox Text="{Binding SearchPlayerIdText, UpdateSourceTrigger=PropertyChanged}" 
-                                         MinWidth="150" 
-                                         VerticalAlignment="Center"
-                                         ToolTipService.ToolTip="Enter the numeric User ID of the player."/>
-                                <Button Content="{DynamicResource CharacterEditor_SearchCharactersButton}" 
-                                        Command="{Binding SearchPlayerCharactersCommand}" 
-                                        Margin="12,0,0,0" 
-                                        Style="{StaticResource AccentButtonStyle}"/>
-                            </StackPanel>
+                        <!-- Search by User ID Section -->
+                        <Border Grid.Column="0" Style="{StaticResource ModernCard}" Margin="8,8,4,8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="1" 
-                                       Text="{Binding PlayerCharactersStatusMessage}" 
-                                       Margin="0,0,0,16" 
-                                       FontStyle="Italic" 
-                                       TextWrapping="Wrap"
-                                       Foreground="{StaticResource ModernSecondaryTextBrush}"/>
+                                <TextBlock Grid.Row="0" Text="Search by User ID" 
+                                           FontSize="16" FontWeight="SemiBold" 
+                                           Margin="0,0,0,16"
+                                           Foreground="{StaticResource ModernAccentBrush}"/>
 
-                            <DataGrid Grid.Row="2" 
-                                      ItemsSource="{Binding PlayerCharactersList}" 
-                                      AutoGenerateColumns="False" 
-                                      IsReadOnly="True" 
-                                      CanUserAddRows="False"
-                                      HeadersVisibility="Column" 
-                                      VerticalScrollBarVisibility="Auto" 
-                                      HorizontalScrollBarVisibility="Auto"
-                                      Background="{StaticResource ModernSurfaceBrush}"
-                                      BorderThickness="0">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="{DynamicResource CharacterEditor_ColCharID}" 
-                                                        Binding="{Binding RoleId}" 
-                                                        Width="Auto" 
-                                                        MinWidth="180"/>
-                                    <DataGridTextColumn Header="{DynamicResource CharacterEditor_ColCharName}" 
-                                                        Binding="{Binding RoleName}" 
-                                                        Width="*" 
-                                                        MinWidth="250"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </Grid>
-                    </Border>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+                                    <TextBlock Text="{DynamicResource CharacterEditor_PlayerUserIDLabel}" 
+                                               VerticalAlignment="Center" 
+                                               Margin="0,0,8,0"
+                                               FontWeight="SemiBold"/>
+                                    <TextBox Text="{Binding SearchPlayerIdText, UpdateSourceTrigger=PropertyChanged}" 
+                                             MinWidth="120" 
+                                             VerticalAlignment="Center"
+                                             ToolTipService.ToolTip="Enter the numeric User ID of the player."/>
+                                    <Button Content="{DynamicResource CharacterEditor_SearchCharactersButton}" 
+                                            Command="{Binding SearchPlayerCharactersCommand}" 
+                                            Margin="12,0,0,0" 
+                                            Style="{StaticResource AccentButtonStyle}"/>
+                                </StackPanel>
+
+                                <TextBlock Grid.Row="2" 
+                                           Text="{Binding PlayerCharactersStatusMessage}" 
+                                           Margin="0,0,0,12" 
+                                           FontStyle="Italic" 
+                                           TextWrapping="Wrap"
+                                           Foreground="{StaticResource ModernSecondaryTextBrush}"/>
+
+                                <DataGrid Grid.Row="3" 
+                                          ItemsSource="{Binding PlayerCharactersList}" 
+                                          AutoGenerateColumns="False" 
+                                          IsReadOnly="True" 
+                                          CanUserAddRows="False"
+                                          HeadersVisibility="Column" 
+                                          VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Auto"
+                                          Background="{StaticResource ModernSurfaceBrush}"
+                                          BorderThickness="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="{DynamicResource CharacterEditor_ColCharID}" 
+                                                            Binding="{Binding RoleId}" 
+                                                            Width="Auto" 
+                                                            MinWidth="120"/>
+                                        <DataGridTextColumn Header="{DynamicResource CharacterEditor_ColCharName}" 
+                                                            Binding="{Binding RoleName}" 
+                                                            Width="*" 
+                                                            MinWidth="150"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </Border>
+
+                        <!-- All Characters List Section -->
+                        <Border Grid.Column="1" Style="{StaticResource ModernCard}" Margin="4,8,8,8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0" Margin="0,0,0,16">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="All Characters (ID: 1024 - 9000000)" 
+                                               FontSize="16" FontWeight="SemiBold" 
+                                               Foreground="{StaticResource ModernAccentBrush}"/>
+                                    <TextBlock Grid.Column="1" 
+                                               Text="{Binding AllCharactersStatusMessage}" 
+                                               FontStyle="Italic" 
+                                               Foreground="{StaticResource ModernSecondaryTextBrush}"/>
+                                </Grid>
+
+                                <DataGrid Grid.Row="1" 
+                                          ItemsSource="{Binding AllCharactersList}" 
+                                          AutoGenerateColumns="False" 
+                                          IsReadOnly="True" 
+                                          CanUserAddRows="False"
+                                          HeadersVisibility="Column" 
+                                          VerticalScrollBarVisibility="Auto" 
+                                          HorizontalScrollBarVisibility="Auto"
+                                          Background="{StaticResource ModernSurfaceBrush}"
+                                          BorderThickness="0">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="ID" 
+                                                            Binding="{Binding RoleId}" 
+                                                            Width="80"/>
+                                        <DataGridTextColumn Header="Name" 
+                                                            Binding="{Binding RoleName}" 
+                                                            Width="150"/>
+                                        <DataGridTextColumn Header="Level" 
+                                                            Binding="{Binding Level}" 
+                                                            Width="60"/>
+                                        <DataGridTextColumn Header="User ID" 
+                                                            Binding="{Binding UserId}" 
+                                                            Width="80"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Pagination Controls -->
+                                <Border Grid.Row="2" 
+                                        Background="{StaticResource ModernSurfaceBrush}" 
+                                        Padding="12,8"
+                                        Margin="-1,0,-1,-1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <TextBlock Text="Page " VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding CurrentPage}" 
+                                                       FontWeight="SemiBold" 
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Text=" of " VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding TotalPages}" 
+                                                       FontWeight="SemiBold" 
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Button Content="◀ Previous" 
+                                                    Command="{Binding PreviousPageCommand}"
+                                                    IsEnabled="{Binding CanGoPrevious}"
+                                                    Margin="0,0,8,0"
+                                                    MinWidth="90"/>
+                                            <Button Content="Next ▶" 
+                                                    Command="{Binding NextPageCommand}"
+                                                    IsEnabled="{Binding CanGoNext}"
+                                                    MinWidth="90"/>
+                                            <Button Content="Refresh" 
+                                                    Command="{Binding RefreshAllCharactersCommand}"
+                                                    Margin="16,0,0,0"
+                                                    Style="{StaticResource AccentButtonStyle}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
                 </TabItem>
 
             </TabControl>

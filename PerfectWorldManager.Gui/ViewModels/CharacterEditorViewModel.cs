@@ -104,6 +104,48 @@ namespace PerfectWorldManager.Gui.ViewModels
             set => SetProperty(ref _playerCharactersStatusMessage, value, nameof(PlayerCharactersStatusMessage));
         }
 
+        // All Characters List Properties
+        public ObservableCollection<GuiPlayerCharacterInfo> AllCharactersList { get; } = new ObservableCollection<GuiPlayerCharacterInfo>();
+
+        private string _allCharactersStatusMessage = string.Empty;
+        public string AllCharactersStatusMessage
+        {
+            get => _allCharactersStatusMessage;
+            set => SetProperty(ref _allCharactersStatusMessage, value, nameof(AllCharactersStatusMessage));
+        }
+
+        private int _currentPage = 1;
+        public int CurrentPage
+        {
+            get => _currentPage;
+            set => SetProperty(ref _currentPage, value, nameof(CurrentPage));
+        }
+
+        private int _totalPages = 1;
+        public int TotalPages
+        {
+            get => _totalPages;
+            set => SetProperty(ref _totalPages, value, nameof(TotalPages));
+        }
+
+        private bool _canGoPrevious;
+        public bool CanGoPrevious
+        {
+            get => _canGoPrevious;
+            set => SetProperty(ref _canGoPrevious, value, nameof(CanGoPrevious));
+        }
+
+        private bool _canGoNext;
+        public bool CanGoNext
+        {
+            get => _canGoNext;
+            set => SetProperty(ref _canGoNext, value, nameof(CanGoNext));
+        }
+
+        private const int PageSize = 50;
+        private const int MinCharacterId = 1024;
+        private const int MaxCharacterId = 9000000;
+
         public ICommand LoadCharacterCommand { get; }
         public ICommand SaveCharacterCommand { get; }
         public ICommand SelectInventoryItemCommand { get; }
@@ -111,6 +153,9 @@ namespace PerfectWorldManager.Gui.ViewModels
         public ICommand SyncXmlToGuiCommand { get; }
         public ICommand RefreshCharacterCommand { get; }
         public ICommand SearchPlayerCharactersCommand { get; }
+        public ICommand PreviousPageCommand { get; }
+        public ICommand NextPageCommand { get; }
+        public ICommand RefreshAllCharactersCommand { get; }
 
         public CharacterEditorViewModel(DaemonGrpcService daemonService, Settings settings, IItemLookupService itemLookupService)
         {
@@ -138,6 +183,11 @@ namespace PerfectWorldManager.Gui.ViewModels
 
             // Corrected RelayCommand instantiation
             SearchPlayerCharactersCommand = new RelayCommand(async _ => await ExecuteSearchPlayerCharactersAsync(), _ => CanExecuteSearchPlayerCharacters());
+            
+            // Pagination commands
+            PreviousPageCommand = new RelayCommand(_ => ExecutePreviousPage(), _ => CanGoPrevious);
+            NextPageCommand = new RelayCommand(_ => ExecuteNextPage(), _ => CanGoNext);
+            RefreshAllCharactersCommand = new RelayCommand(async _ => await LoadAllCharactersPageAsync(), _ => !IsLoading && _daemonService != null && _daemonService.IsConnected);
         }
 
         private void OnDaemonConnectionChanged(object? sender, EventArgs e) // Made sender nullable
@@ -371,6 +421,74 @@ namespace PerfectWorldManager.Gui.ViewModels
             }
         }
 
+        private void ExecutePreviousPage()
+        {
+            if (CurrentPage > 1)
+            {
+                CurrentPage--;
+                _ = LoadAllCharactersPageAsync();
+            }
+        }
+
+        private void ExecuteNextPage()
+        {
+            if (CurrentPage < TotalPages)
+            {
+                CurrentPage++;
+                _ = LoadAllCharactersPageAsync();
+            }
+        }
+
+        private async Task LoadAllCharactersPageAsync()
+        {
+            if (!_daemonService.IsConnected) return;
+
+            IsLoading = true;
+            AllCharactersStatusMessage = $"Loading page {CurrentPage}...";
+            AllCharactersList.Clear();
+
+            try
+            {
+                // Calculate the range of character IDs for this page
+                int startId = MinCharacterId + ((CurrentPage - 1) * PageSize);
+                int endId = Math.Min(startId + PageSize - 1, MaxCharacterId);
+
+                // Get characters in this range
+                var (characters, success, message) = await _daemonService.GetCharacterRangeAsync(startId, endId);
+                
+                if (success && characters != null)
+                {
+                    foreach (var character in characters)
+                    {
+                        AllCharactersList.Add(character);
+                    }
+                    
+                    AllCharactersStatusMessage = $"Showing {characters.Count} characters";
+                    
+                    // Update pagination state
+                    TotalPages = (int)Math.Ceiling((double)(MaxCharacterId - MinCharacterId + 1) / PageSize);
+                    CanGoPrevious = CurrentPage > 1;
+                    CanGoNext = CurrentPage < TotalPages;
+                    
+                    (PreviousPageCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                    (NextPageCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                }
+                else
+                {
+                    AllCharactersStatusMessage = $"Error: {message ?? "Failed to load characters"}";
+                }
+            }
+            catch (Exception ex)
+            {
+                AllCharactersStatusMessage = $"Error: {ex.Message}";
+                Debug.WriteLine($"Exception in LoadAllCharactersPageAsync: {ex}");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
         public void UpdateCommandStates() // Removed 'new' keyword (CS0109)
         {
             Application.Current?.Dispatcher?.Invoke(() =>
@@ -381,6 +499,7 @@ namespace PerfectWorldManager.Gui.ViewModels
                 (SyncXmlToGuiCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (RefreshCharacterCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (SearchPlayerCharactersCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (RefreshAllCharactersCommand as RelayCommand)?.RaiseCanExecuteChanged();
             });
         }
 

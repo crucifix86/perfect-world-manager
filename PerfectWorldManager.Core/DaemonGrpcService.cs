@@ -16,6 +16,8 @@ namespace PerfectWorldManager.Core
     {
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+        public int Level { get; set; }
+        public int UserId { get; set; }
     }
 
     public class DaemonGrpcService : IDisposable
@@ -252,6 +254,16 @@ namespace PerfectWorldManager.Core
             ExecuteGrpcCallAsync(async (client, options) => await client.ImportCharacterDataAsync(request, options),
                                  () => new ImportCharacterResponse { Success = false, Message = "Daemon Error: Failed to connect or client error during ImportCharacterData." });
 
+        // For now, we'll implement this using direct database query through the daemon
+        // This is a temporary implementation until the gRPC endpoint is added
+        public async Task<(List<GuiPlayerCharacterInfo> Characters, bool Success, string Message)> GetCharacterRangeAsync(int startId, int endId)
+        {
+            // Since we don't have a dedicated gRPC method yet, we'll return an empty list
+            // with a message indicating this feature needs daemon support
+            return (new List<GuiPlayerCharacterInfo>(), false, 
+                "Character range query not yet implemented in daemon. Please use search by User ID for now.");
+        }
+
         public async Task<(List<GuiPlayerCharacterInfo> Characters, bool Success, string Message)> GetPlayerCharactersAsync(int userId)
         {
             var client = GetClient();
@@ -284,7 +296,13 @@ namespace PerfectWorldManager.Core
                 {
                     foreach (var charItem in response.Characters)
                     {
-                        guiCharacters.Add(new GuiPlayerCharacterInfo { RoleId = charItem.RoleId, RoleName = charItem.RoleName });
+                        guiCharacters.Add(new GuiPlayerCharacterInfo 
+                        { 
+                            RoleId = charItem.RoleId, 
+                            RoleName = charItem.RoleName,
+                            Level = 0, // Level not provided by current gRPC response
+                            UserId = userId 
+                        });
                     }
                 }
                 return (guiCharacters, response.Success, response.Message);
