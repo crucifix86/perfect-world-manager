@@ -100,6 +100,19 @@ namespace PerfectWorldManager.Gui
                 cubiTextBox.PreviewTextInput += NumericTextBox_PreviewTextInput;
             }
             InitializeServices(true); // Force initial service setup
+            
+            // Auto-connect to daemon if enabled
+            if (AppSettings.AutoConnectToDaemon && 
+                !string.IsNullOrWhiteSpace(AppSettings.DaemonServiceUrl) && 
+                !string.IsNullOrWhiteSpace(AppSettings.ApiKey))
+            {
+                // Delay the auto-connect slightly to ensure the UI is fully loaded
+                Dispatcher.BeginInvoke(new Action(async () =>
+                {
+                    await Task.Delay(500); // Small delay to let UI settle
+                    ConnectToDaemon();
+                }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+            }
         }
 
         // ADDED for Localization
@@ -538,17 +551,28 @@ namespace PerfectWorldManager.Gui
         private async void ConnectDaemonButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateAppSettingsFromUi(); // Ensure ApiKey is read from UI before initializing
+            await ConnectToDaemon();
+        }
+
+        private async Task ConnectToDaemon()
+        {
             InitializeServices(true);
 
             if (_daemonService == null)
             {
-                MessageBox.Show("Daemon Service could not be initialized. Check settings.", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error); // Consider localizing
+                if (!AppSettings.AutoConnectToDaemon) // Only show message box if not auto-connecting
+                {
+                    MessageBox.Show("Daemon Service could not be initialized. Check settings.", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error); // Consider localizing
+                }
                 StatusBarText.Text = "Daemon service init failed."; // Consider localizing
                 return;
             }
             if (string.IsNullOrWhiteSpace(AppSettings.ApiKey))
             {
-                MessageBox.Show("API Key is missing in settings. Please configure an API Key.", "API Key Missing", MessageBoxButton.OK, MessageBoxImage.Warning); // Consider localizing
+                if (!AppSettings.AutoConnectToDaemon) // Only show message box if not auto-connecting
+                {
+                    MessageBox.Show("API Key is missing in settings. Please configure an API Key.", "API Key Missing", MessageBoxButton.OK, MessageBoxImage.Warning); // Consider localizing
+                }
                 StatusBarText.Text = "API Key is missing."; // Consider localizing
                 return;
             }

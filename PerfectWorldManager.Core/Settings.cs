@@ -23,6 +23,13 @@ namespace PerfectWorldManager.Core
             get => _apiKey;
             set => SetProperty(ref _apiKey, value);
         }
+
+        private bool _autoConnectToDaemon = false;
+        public bool AutoConnectToDaemon
+        {
+            get => _autoConnectToDaemon;
+            set => SetProperty(ref _autoConnectToDaemon, value);
+        }
         #endregion
 
         #region Path Settings (Client-side perspective or for parameters to Daemon)

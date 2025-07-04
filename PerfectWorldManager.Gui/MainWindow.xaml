@@ -208,6 +208,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Label Content="{DynamicResource Settings_DaemonServiceUrl}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
                             <TextBox Name="DaemonUrlTextBox" Grid.Row="0" Grid.Column="1" Margin="5" ToolTip="URL of the Perfect World Manager Daemon service (e.g., http://localhost:50051)" Text="{Binding AppSettings.DaemonServiceUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -215,6 +216,11 @@
                             <Label Content="{DynamicResource Settings_ApiKey}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
                             <TextBox Name="ApiKeyTextBox" Grid.Row="1" Grid.Column="1" Margin="5" ToolTip="API Key for authenticating with the daemon." Text="{Binding AppSettings.ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Name="GenerateApiKeyButton" Content="{DynamicResource Settings_GenerateApiKey}" Grid.Row="1" Grid.Column="2" Margin="5" Padding="5,2" Click="GenerateApiKeyButton_Click" VerticalAlignment="Center"/>
+                            
+                            <CheckBox Name="AutoConnectCheckBox" Grid.Row="2" Grid.Column="1" Margin="5" 
+                                      Content="Connect automatically on startup" 
+                                      IsChecked="{Binding AppSettings.AutoConnectToDaemon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ToolTip="Automatically connect to the daemon when the application starts"/>
                         </Grid>
 
                         <TextBlock Text="{DynamicResource Settings_ApplicationSettings}" FontWeight="Bold" Margin="0,10,0,5"/>
